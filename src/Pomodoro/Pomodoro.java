@@ -1,10 +1,16 @@
 package Pomodoro;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-public class Pomodoro extends JFrame{
+public class Pomodoro extends JFrame
+{
 
     private JPanel main;
     private JTextField timerPresetsTextField;
@@ -35,8 +41,10 @@ public class Pomodoro extends JFrame{
     private static PomodoroManager manager;
     private PomodoroConfig config;
 
-    public Pomodoro(){
-        Start.addActionListener(new ActionListener() {
+    public Pomodoro()
+    {
+        Start.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
@@ -44,19 +52,23 @@ public class Pomodoro extends JFrame{
             }
         });
 
-        Reset.addActionListener(new ActionListener() {
+        Reset.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 // TODO
                 JOptionPane.showMessageDialog(Start, "Hello Reset");
             }
         });
 
-        Pause.addActionListener(new ActionListener() {
+        Pause.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 // TODO
-                JOptionPane.showMessageDialog(Start, "Hello Pause");
+                manager.pausePomodoro();
             }
         });
 
@@ -65,13 +77,15 @@ public class Pomodoro extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                try{
+                try
+                {
 
                     int workTimeVal = Integer.parseInt(workTimeInput.getText());
-                    if(workTimeVal < 0 || workTimeVal > 120){
+                    if (workTimeVal < 0 || workTimeVal > 120)
+                    {
                         JOptionPane.showMessageDialog(null, "Enter a value between 0 and 120");
-                    }
-                    else{
+                    } else
+                    {
                         config.SetWorkTime(workTimeVal);
                     }
                 } catch (NumberFormatException exception)
@@ -85,15 +99,18 @@ public class Pomodoro extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                try{
+                try
+                {
                     int breakTimeVal = Integer.parseInt(breakTimeInput.getText());
-                    if(breakTimeVal < 0 || breakTimeVal > 30){
+                    if (breakTimeVal < 0 || breakTimeVal > 30)
+                    {
                         JOptionPane.showMessageDialog(null, "Enter a value between 0 and 30");
-                    }
-                    else{
+                    } else
+                    {
                         config.SetBreakTime(breakTimeVal);
                     }
-                } catch (NumberFormatException exception){
+                } catch (NumberFormatException exception)
+                {
                     JOptionPane.showMessageDialog(null, "Not an Integer");
                 }
             }
@@ -127,12 +144,31 @@ public class Pomodoro extends JFrame{
         });
     }
 
-    private static void setup(){
+    private static void setup()
+    {
         pomodoro.createAndShowGUI();
+        pomodoro.setImages();
         manager = new PomodoroManager(pomodoro.config, pomodoro);
     }
 
-    private static void createAndShowGUI(){
+    private static void setImages()
+    {
+        try
+        {
+            BufferedImage startButtonIcon = ImageIO.read(new File("Assets/start.png"));
+            pomodoro.Start.setIcon(new ImageIcon(startButtonIcon));
+            pomodoro.Start.setBorder(BorderFactory.createEmptyBorder());
+            pomodoro.Start.setContentAreaFilled(false);
+            pomodoro.Start.setOpaque(true);
+            pomodoro.Start.setPreferredSize(new Dimension(10, 10));
+        } catch (IOException e)
+        {
+            System.out.println("couldn't load image");
+        }
+    }
+
+    private static void createAndShowGUI()
+    {
         pomodoro = new Pomodoro();
         pomodoro.setTitle("Pomodoro Timer");
         pomodoro.setSize(1600, 960);
@@ -147,12 +183,5 @@ public class Pomodoro extends JFrame{
     public static void main(String[] args)
     {
         SwingUtilities.invokeLater(Pomodoro::setup);
-
-        /*
-        Main mainPane = new Main();
-        mainPane.setup(mainPane);
-
-        mainPane.config = new PomodoroConfig(4, 25, 5, 1, 15);
-        mainPane.manager = new PomodoroManager(mainPane.config);*/
     }
 }

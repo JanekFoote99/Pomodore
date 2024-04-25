@@ -11,13 +11,26 @@ public class PomodoroManager
 
     private Timer timer;
 
-    public PomodoroManager(PomodoroConfig config, Pomodoro frame){
+    public PomodoroManager(PomodoroConfig config, Pomodoro frame)
+    {
         this.config = config;
         this.frame = frame;
     }
 
-    public void startPomodoro(PomodoroConfig config){
-        if(curPomodoro == null){
+    public void pausePomodoro(){
+        if(curPomodoro.timerPaused){
+            curPomodoro.timerPaused = false;
+            curPomodoro.continueTimer();
+        }else{
+            curPomodoro.timerPaused = true;
+            curPomodoro.pauseTimer();
+        }
+    }
+
+    public void startPomodoro(PomodoroConfig config)
+    {
+        if (curPomodoro == null)
+        {
             curPomodoro = new PomodoroCycle(frame.getTimerStatusText(), config.workTime, config.breakTime, config.numCycles);
 
             curPomodoro.startWorkCycle();

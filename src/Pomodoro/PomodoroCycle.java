@@ -1,4 +1,5 @@
 package Pomodoro;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +11,8 @@ public class PomodoroCycle
     private boolean inWork;
     private Timer timer;
 
-    enum CycleType {
+    enum CycleType
+    {
         WORK,
         BREAK,
         LONG_BREAK
@@ -32,6 +34,9 @@ public class PomodoroCycle
 
     private JTextField timeDisplay;
 
+    public boolean timerPaused;
+    private long timerPauseTime = 0;
+
     public PomodoroCycle()
     {
         workTime = MinutesToMilliseconds(25);
@@ -39,18 +44,15 @@ public class PomodoroCycle
         numCyclesPomodoro = 4;
         numCycles = 1;
     }
+
     public PomodoroCycle(JTextField timeDisplay, float workTime, float breakTime, int numCycles)
     {
         this.timeDisplay = timeDisplay;
-        this.workTime = MinutesToMilliseconds((long)workTime);
-        this.breakTime = MinutesToMilliseconds((long)breakTime);
+        this.workTime = workTime;
+        this.breakTime = breakTime;
         this.numCycles = numCycles;
-    }
 
-    // TODO: start the Work Cycle and returns whether or not the cycle is finished
-    public void startWorkCycle(){
-
-        if(timer == null)
+        if (timer == null)
         {
             timer = new Timer(10, new ActionListener()
             {
@@ -65,27 +67,52 @@ public class PomodoroCycle
                     long curTime = System.currentTimeMillis();
                     long delta = curTime - startTime;
 
-                    if(delta >= workTime){
-                        delta = (long)workTime;
+                    if (delta >= MinutesToMilliseconds(workTime))
+                    {
+                        delta = MinutesToMilliseconds(workTime);
                         timer.stop();
                     }
 
-                    long remainingTime = (long)workTime - delta;
+                    long remainingTime = MinutesToMilliseconds(workTime) - delta;
 
                     SimpleDateFormat df = new SimpleDateFormat("mm:ss");
                     timeDisplay.setText(df.format(remainingTime));
                 }
             });
         }
+    }
+
+    public void pauseTimer()
+    {
+        // Start tracking time after hitting the pause button
+        timerPauseTime = System.currentTimeMillis();
+
+        timer.stop();
+    }
+
+    public void continueTimer(){
+        // Calculate dif between pause and resume
+        timerPauseTime = System.currentTimeMillis() - timerPauseTime;
+        // Add the needed time to the startTime, so that the remaining time is calculated correctly
+        startTime += timerPauseTime;
+
+        timer.start();
+    }
+
+    // TODO: start the Work Cycle and returns whether or not the cycle is finished
+    public void startWorkCycle()
+    {
         timer.setInitialDelay(0);
         timer.start();
     }
 
-    public void startBreakCycle(){
+    public void startBreakCycle()
+    {
 
     }
 
-    public void startLongBreakCycle(){
+    public void startLongBreakCycle()
+    {
 
     }
 
@@ -101,9 +128,9 @@ public class PomodoroCycle
         this.breakTime = breakTime;
     }
 
-    // Hellper function to convert minutes to milliseconds
-    private long MinutesToMilliseconds(long minutes){
-        return minutes * 60 * 1000;
+    // Helper function to convert minutes to milliseconds
+    private <T extends Number> long MinutesToMilliseconds(T minutes)
+    {
+        return minutes.longValue() * 60 * 1000;
     }
-
 }
