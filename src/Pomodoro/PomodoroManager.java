@@ -27,12 +27,18 @@ public class PomodoroManager
         }
     }
 
+    public void resetPomodoro(){
+        curPomodoro.resetTimer();
+    }
+
     public void startPomodoro(PomodoroConfig config)
     {
         if (curPomodoro == null)
         {
             curPomodoro = new PomodoroCycle(frame.getTimerStatusText(), config.workTime, config.breakTime, config.numCycles);
 
+            curPomodoro.startWorkCycle();
+        } else{
             curPomodoro.startWorkCycle();
         }
     }

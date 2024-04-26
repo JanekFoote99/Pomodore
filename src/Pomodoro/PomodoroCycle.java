@@ -86,6 +86,7 @@ public class PomodoroCycle
     {
         // Start tracking time after hitting the pause button
         timerPauseTime = System.currentTimeMillis();
+        timerPaused = true;
 
         timer.stop();
     }
@@ -96,14 +97,28 @@ public class PomodoroCycle
         // Add the needed time to the startTime, so that the remaining time is calculated correctly
         startTime += timerPauseTime;
 
+        timerPaused = false;
+
         timer.start();
+    }
+
+    public void resetTimer(){
+        startTime = -1;
+        SimpleDateFormat df = new SimpleDateFormat("mm:ss");
+        timeDisplay.setText(df.format(MinutesToMilliseconds(workTime)));
+        timer.stop();
+        timerPaused = true;
     }
 
     // TODO: start the Work Cycle and returns whether or not the cycle is finished
     public void startWorkCycle()
     {
-        timer.setInitialDelay(0);
-        timer.start();
+        if(timerPaused){
+            timer.restart();
+        }else{
+            timer.setInitialDelay(0);
+            timer.start();
+        }
     }
 
     public void startBreakCycle()

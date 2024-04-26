@@ -58,7 +58,7 @@ public class Pomodoro extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 // TODO
-                JOptionPane.showMessageDialog(Start, "Hello Reset");
+                manager.resetPomodoro();
             }
         });
 
@@ -146,12 +146,13 @@ public class Pomodoro extends JFrame
 
     private static void setup()
     {
+        pomodoro = new Pomodoro();
         pomodoro.createAndShowGUI();
         pomodoro.setImages();
         manager = new PomodoroManager(pomodoro.config, pomodoro);
     }
 
-    private static void setImages()
+    private void setImages()
     {
         try
         {
@@ -167,11 +168,10 @@ public class Pomodoro extends JFrame
         }
     }
 
-    private static void createAndShowGUI()
+    private void createAndShowGUI()
     {
-        pomodoro = new Pomodoro();
         pomodoro.setTitle("Pomodoro Timer");
-        pomodoro.setSize(1600, 960);
+        pomodoro.setSize(1600, 920);
         pomodoro.setVisible(true);
         pomodoro.setContentPane(pomodoro.main);
         pomodoro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
