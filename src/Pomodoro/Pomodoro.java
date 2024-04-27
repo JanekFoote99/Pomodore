@@ -148,7 +148,7 @@ public class Pomodoro extends JFrame
     {
         pomodoro = new Pomodoro();
         pomodoro.createAndShowGUI();
-        pomodoro.setImages();
+        //pomodoro.setImages();
         manager = new PomodoroManager(pomodoro.config, pomodoro);
     }
 
@@ -162,6 +162,7 @@ public class Pomodoro extends JFrame
             pomodoro.Start.setContentAreaFilled(false);
             pomodoro.Start.setOpaque(true);
             pomodoro.Start.setPreferredSize(new Dimension(10, 10));
+            pomodoro.Start.setText("");
         } catch (IOException e)
         {
             System.out.println("couldn't load image");

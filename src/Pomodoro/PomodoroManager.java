@@ -5,16 +5,13 @@ import javax.swing.*;
 public class PomodoroManager
 {
     private PomodoroCycle curPomodoro;
-    private PomodoroConfig config;
-    private Pomodoro frame;
+    private final Pomodoro frame;
     private long startTimePomodoro;
-
-    private Timer timer;
 
     public PomodoroManager(PomodoroConfig config, Pomodoro frame)
     {
-        this.config = config;
         this.frame = frame;
+        this.curPomodoro = new PomodoroCycle(frame.getTimerStatusText(), config);
     }
 
     public void pausePomodoro(){
@@ -39,6 +36,12 @@ public class PomodoroManager
 
             curPomodoro.startWorkCycle();
         } else{
+            curPomodoro.SetWorkTime(config.workTime);
+            curPomodoro.SetBreakTime(config.breakTime);
+            curPomodoro.SetBreakTimePomodoro(config.breakTimePomodoro);
+            curPomodoro.SetNumCyclesPomodoro(config.numCyclesPomodoro);
+            curPomodoro.SetNumCycles(config.numCycles);
+
             curPomodoro.startWorkCycle();
         }
     }
