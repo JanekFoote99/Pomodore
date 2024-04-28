@@ -28,6 +28,7 @@ public class PomodoroCycle
     // Flag to determine which Cycle the variable startTime represents
     private CycleType curCycle;
     private long startTime = -1;
+    private long timerTime = -1;
 
     private float workTime;
     private float breakTime;
@@ -57,6 +58,7 @@ public class PomodoroCycle
         this.workTime = workTime;
         this.breakTime = breakTime;
         this.numCycles = numCycles;
+        this.curCycle = CycleType.WORK;
 
         setupTimer();
     }
@@ -67,6 +69,7 @@ public class PomodoroCycle
         this.workTime = config.workTime;
         this.breakTime = config.breakTime;
         this.numCycles = config.numCycles;
+        this.curCycle = CycleType.WORK;
 
         setupTimer();
     }
@@ -86,43 +89,60 @@ public class PomodoroCycle
                 long curTime = System.currentTimeMillis();
                 long delta = curTime - startTime;
 
-                if (delta >= MinutesToMilliseconds(workTime))
+                if (delta >= MinutesToMilliseconds(timerTime))
                 {
-                    delta = MinutesToMilliseconds(workTime);
+                    // Clamp so that teh time is correctly displayed after finishing
+                    delta = MinutesToMilliseconds(timerTime);
 
                     // Determine and configure the next timer according to the transition of the Cycles
+
+                    if (numCycles == 0)
                     {
-                        if (numCycles == 0)
+                        curCycle = CycleType.OVER;
+                    } else
+                    {
+                        switch (curCycle)
                         {
-                            curCycle = CycleType.OVER;
-                        } else
-                        {
-                            switch (curCycle)
-                            {
-                                case WORK:
-                                    if (numCycles != 1)
-                                    {
-                                        curCycle = CycleType.BREAK;
-                                        startBreakCycle();
-                                    } else
-                                    {
-                                        curCycle = CycleType.LONG_BREAK;
-                                        startLongBreakCycle();
-                                    }
-                                case BREAK:
-                                    curCycle = CycleType.WORK;
-                                    startWorkCycle();
-                                case LONG_BREAK:
-                                    curCycle = CycleType.WORK;
-                                    startWorkCycle();
-                            }
+                            case WORK:
+                                if (numCycles != 1)
+                                {
+                                    curCycle = CycleType.BREAK;
+                                    // set time of the next Cycle to breakTime
+                                    timerTime = (long)breakTime;
+                                    numCycles--;
+                                    break;
+                                } else
+                                {
+                                    curCycle = CycleType.LONG_BREAK;
+                                    // set time of the next Cycle to breakTime
+                                    timerTime = (long)breakTimePomodoro;
+                                    break;
+                                }
+                            case BREAK:
+                                curCycle = CycleType.WORK;
+                                timerTime = (long)workTime;
+                                break;
+                            case LONG_BREAK:
+                                curCycle = CycleType.WORK;
+                                timerTime = (long)workTime;
+                                break;
                         }
+                        // new Timer begins, reset startTime
+                        startTime = curTime;
                     }
 
-                    timer.stop();
+                    if(curCycle != CycleType.OVER)
+                    {
+                        timer.restart();
+                    }
+                    else
+                    {
+                        timer.stop();
+                    }
+
                 }
 
-                long remainingTime = MinutesToMilliseconds(workTime) - delta;
+                long remainingTime = MinutesToMilliseconds(timerTime) - delta;
 
                 SimpleDateFormat df = new SimpleDateFormat("mm:ss");
                 timeDisplay.setText(df.format(remainingTime));
@@ -184,6 +204,7 @@ public class PomodoroCycle
             continueTimer();
         } else
         {
+            timerTime = (long)workTime;
             timer.start();
         }
     }
