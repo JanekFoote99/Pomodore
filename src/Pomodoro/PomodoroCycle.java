@@ -52,6 +52,16 @@ public class PomodoroCycle
         numCycles = 1;
     }
 
+    // Testing
+    public PomodoroCycle(PomodoroConfig config){
+        this.workTime = config.workTime;
+        this.breakTime = config.breakTime;
+        this.numCycles = config.numCycles;
+        this.curCycle = CycleType.WORK;
+
+        setupTimer();
+    }
+
     public PomodoroCycle(JTextField timeDisplay, float workTime, float breakTime, int numCycles)
     {
         this.timeDisplay = timeDisplay;
