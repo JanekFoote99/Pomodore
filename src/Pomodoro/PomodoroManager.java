@@ -11,7 +11,7 @@ public class PomodoroManager
     public PomodoroManager(PomodoroConfig config, Pomodoro frame)
     {
         this.frame = frame;
-        this.curPomodoro = new PomodoroCycle(frame.getTimerStatusText(), config);
+        this.curPomodoro = new PomodoroCycle(frame, config);
     }
 
     public void pausePomodoro(){
@@ -32,7 +32,7 @@ public class PomodoroManager
     {
         if (curPomodoro == null)
         {
-            curPomodoro = new PomodoroCycle(frame.getTimerStatusText(), config.workTime, config.breakTime, config.numCycles);
+            curPomodoro = new PomodoroCycle(frame, config.workTime, config.breakTime, config.numCycles);
 
             curPomodoro.startWorkCycle();
         } else{

@@ -24,18 +24,21 @@ public class Pomodoro extends JFrame
     private JButton Start;
     private JButton Pause;
     private JButton Reset;
-    private JLabel mainPanel;
 
     public JTextField getTimerStatusText()
     {
         return TimerStatusText;
     }
+    public JTextField getCycleDisplay() { return cycleDisplay; }
+    public JTextField getNumCycleDisplay() { return numCycleDisplay; }
 
     private JTextField TimerStatusText;
     private JFormattedTextField breakTimeInput;
     private JButton SetWorkTimeButton;
     private JButton SetBreakTimeButton;
     private JFormattedTextField workTimeInput;
+    private JTextField cycleDisplay;
+    private JTextField numCycleDisplay;
 
     private static Pomodoro pomodoro;
     private static PomodoroManager manager;
