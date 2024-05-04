@@ -20,6 +20,14 @@ class PomodoroCycleTest
 
     @Test
     void resetValuesOnTimerReset(){
+        PomodoroCycle cycle = new PomodoroCycle(config);
+
+        cycle.startWorkCycle();
+
+        cycle.resetTimer();
+
+        assertTrue(cycle.timerReset);
+        assertEquals(1, cycle.getCurNumCycles());
 
     }
 

@@ -37,10 +37,12 @@ public class PomodoroCycle
     private int numCyclesPomodoro;
     private int numCycles;
     private int curNumCycles = 1;
+    public int getCurNumCycles() { return curNumCycles; }
 
     private JTextField timeDisplay;
     private JTextField numCyclesDisplay;
     private JTextField curCycleDisplay;
+    private JProgressBar timerBarDisplay;
 
     public boolean timerPaused;
     public boolean timerReset;
@@ -128,6 +130,8 @@ public class PomodoroCycle
                 }
 
                 long remainingTime = MinutesToMilliseconds(timerTime) - delta;
+
+                timerBarDisplay.setValue(50);
 
                 SimpleDateFormat df = new SimpleDateFormat("mm:ss");
                 timeDisplay.setText(df.format(remainingTime) + " / " + df.format(MinutesToMilliseconds(timerTime)));

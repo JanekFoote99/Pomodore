@@ -42,6 +42,7 @@ public class PomodoroManager
             curPomodoro.SetNumCyclesPomodoro(config.numCyclesPomodoro);
             curPomodoro.SetNumCycles(config.numCycles);
 
+            curPomodoro.resetTimer();
             curPomodoro.startWorkCycle();
         }
     }
