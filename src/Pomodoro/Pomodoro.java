@@ -29,16 +29,30 @@ public class Pomodoro extends JFrame
     {
         return TimerStatusText;
     }
-    public JTextField getCycleDisplay() { return cycleDisplay; }
-    public JTextField getNumCycleDisplay() { return numCycleDisplay; }
+
+    public JTextField getCycleDisplay()
+    {
+        return cycleDisplay;
+    }
+
+    public JTextField getNumCycleDisplay()
+    {
+        return numCycleDisplay;
+    }
 
     private JTextField TimerStatusText;
     private JFormattedTextField breakTimeInput;
-    private JButton SetWorkTimeButton;
-    private JButton SetBreakTimeButton;
+    private JButton SetInputButton;
     private JFormattedTextField workTimeInput;
     private JTextField cycleDisplay;
     private JTextField numCycleDisplay;
+    private JTextField longBreakTimeTextField;
+    private JTextField numCyclesTextField;
+    private JTextField numCyclesPomodoroTextField;
+    private JFormattedTextField longBreakTimeInput;
+    private JFormattedTextField numCyclesInput;
+    private JFormattedTextField numCyclesPomodoroInput;
+    private JButton setAsPresetButton;
 
     private static Pomodoro pomodoro;
     private static PomodoroManager manager;
@@ -75,46 +89,85 @@ public class Pomodoro extends JFrame
             }
         });
 
-        SetWorkTimeButton.addActionListener(new ActionListener()
+        SetInputButton.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                // Set Work Time
                 try
                 {
-
                     int workTimeVal = Integer.parseInt(workTimeInput.getText());
                     if (workTimeVal < 0 || workTimeVal > 120)
                     {
-                        JOptionPane.showMessageDialog(null, "Enter a value between 0 and 120");
+                        JOptionPane.showMessageDialog(null, "Work Time unchanged, enter a value between 0 and 120");
                     } else
                     {
                         config.SetWorkTime(workTimeVal);
                     }
                 } catch (NumberFormatException exception)
                 {
-                    JOptionPane.showMessageDialog(null, "Not an Integer");
+                    JOptionPane.showMessageDialog(null, "Work Time not an Integer");
                 }
-            }
-        });
-        SetBreakTimeButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
+                // Set Break Time
                 try
                 {
                     int breakTimeVal = Integer.parseInt(breakTimeInput.getText());
                     if (breakTimeVal < 0 || breakTimeVal > 30)
                     {
-                        JOptionPane.showMessageDialog(null, "Enter a value between 0 and 30");
+                        JOptionPane.showMessageDialog(null, "Pause Time unchanged, enter a value between 0 and 30");
                     } else
                     {
                         config.SetBreakTime(breakTimeVal);
                     }
                 } catch (NumberFormatException exception)
                 {
-                    JOptionPane.showMessageDialog(null, "Not an Integer");
+                    JOptionPane.showMessageDialog(null, "Pause Time not an Integer");
+                }
+                // Set Long Pause Time
+                try
+                {
+                    int longBreakTimeVal = Integer.parseInt(longBreakTimeInput.getText());
+                    if (longBreakTimeVal < 0 || longBreakTimeVal > 30)
+                    {
+                        JOptionPane.showMessageDialog(null, "Long Pause Time unchanged, enter a value between 0 and 30");
+                    } else
+                    {
+                        config.SetLongBreakTime(longBreakTimeVal);
+                    }
+                } catch (NumberFormatException exception)
+                {
+                    JOptionPane.showMessageDialog(null, "Long Pause Time not an Integer");
+                }
+                // Set Number of Cycles
+                try
+                {
+                    int numCycles = Integer.parseInt(numCyclesInput.getText());
+                    if (numCycles < 0 || numCycles > 12)
+                    {
+                        JOptionPane.showMessageDialog(null, "Number of Cycles unchanged, enter a value between 0 and 12");
+                    } else
+                    {
+                        config.SetNumberOfCycles(numCycles);
+                    }
+                } catch (NumberFormatException exception)
+                {
+                    JOptionPane.showMessageDialog(null, "Number of Cycles not an Integer");
+                }
+                // Set Number of Pomodoro Cycles
+                try
+                {
+                    int numPomodoroCycles = Integer.parseInt(numCyclesInput.getText());
+                    if (numPomodoroCycles < 0 || numPomodoroCycles > 4)
+                    {
+                        JOptionPane.showMessageDialog(null, "Number of Pomodoro Cycles unchanged, enter a value between 0 and 4");
+                    } else
+                    {
+                        config.SetNumberOfPomodoroCycles(numPomodoroCycles);
+                    }
+                } catch (NumberFormatException exception)
+                {
+                    JOptionPane.showMessageDialog(null, "Number of Pomodoro Cycles not an Integer");
                 }
             }
         });
@@ -143,6 +196,15 @@ public class Pomodoro extends JFrame
             {
                 pomodoro.config.workTime = 55.0f;
                 pomodoro.config.breakTime = 5.0f;
+            }
+        });
+        //TODO
+        setAsPresetButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+
             }
         });
     }

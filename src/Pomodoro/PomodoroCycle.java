@@ -31,7 +31,7 @@ public class PomodoroCycle
 
     private float workTime;
     private float breakTime;
-    // Break Time between two Pomodoros
+    // Break Time between two Pomodoro Cycles
     private float breakTimePomodoro;
     // Number of work/time cycles it takes to complete one Pomodoro
     private int numCyclesPomodoro;
@@ -131,7 +131,7 @@ public class PomodoroCycle
 
                 long remainingTime = MinutesToMilliseconds(timerTime) - delta;
 
-                timerBarDisplay.setValue(50);
+                //timerBarDisplay.setValue(50);
 
                 SimpleDateFormat df = new SimpleDateFormat("mm:ss");
                 timeDisplay.setText(df.format(remainingTime) + " / " + df.format(MinutesToMilliseconds(timerTime)));

@@ -1,7 +1,5 @@
 package Pomodoro;
 
-import javax.swing.*;
-
 public class PomodoroManager
 {
     private PomodoroCycle curPomodoro;
@@ -39,10 +37,10 @@ public class PomodoroManager
             curPomodoro.SetWorkTime(config.workTime);
             curPomodoro.SetBreakTime(config.breakTime);
             curPomodoro.SetBreakTimePomodoro(config.breakTimePomodoro);
-            curPomodoro.SetNumCyclesPomodoro(config.numCyclesPomodoro);
+            curPomodoro.SetNumCyclesPomodoro(config.numPomodoroCycles);
             curPomodoro.SetNumCycles(config.numCycles);
 
-            curPomodoro.resetTimer();
+            //curPomodoro.resetTimer();
             curPomodoro.startWorkCycle();
         }
     }
