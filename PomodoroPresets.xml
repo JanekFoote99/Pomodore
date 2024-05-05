@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding"UTF-8"?>
+<presets>
+	<preset id="0">
+		<worktime>
+			25
+		<worktime>
+		<breaktime>
+			5
+		</breaktime>
+		<longbreaktime>
+			20
+		</longbreaktime>
+		<numCycles>
+			4
+		</numCycles>
+		<numPomodoroCycles>
+			1
+		</numPomodoroCycles>
+	</preset>
+	<preset id="1">
+		<worktime>
+			45
+		<worktime>
+		<breaktime>
+			15
+		</breaktime>
+		<longbreaktime>
+			20
+		</longbreaktime>
+		<numCycles>
+			4
+		</numCycles>
+		<numPomodoroCycles>
+			1
+		</numPomodoroCycles>
+	</preset>
+	<preset id="2">
+		<worktime>
+			55
+		<worktime>
+		<breaktime>
+			5
+		</breaktime>
+		<longbreaktime>
+			20
+		</longbreaktime>
+		<numCycles>
+			4
+		</numCycles>
+		<numPomodoroCycles>
+			1
+		</numPomodoroCycles>
+	</preset>
+</presets>

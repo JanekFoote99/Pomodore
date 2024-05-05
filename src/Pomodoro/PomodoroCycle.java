@@ -210,17 +210,19 @@ public class PomodoroCycle
         timeDisplay.setText(df.format(MinutesToMilliseconds(workTime)));
         timer.stop();
 
+        curNumCycles = 1;
         timerPaused = true;
         timerReset = true;
     }
 
-    // TODO: start the Work Cycle and returns whether or not the cycle is finished
+    // TODO: Clean up Code
     public void startWorkCycle()
     {
         if (timerReset)
         {
             timerReset = false;
             timerPaused = false;
+            timerTime = (long)workTime;
             timer.restart();
         } else if (timerPaused)
         {
@@ -244,6 +246,14 @@ public class PomodoroCycle
     public void startLongBreakCycle()
     {
 
+    }
+
+    void SetConfig(PomodoroConfig config){
+        this.workTime = config.workTime;
+        this.breakTime = config.breakTime;
+        this.breakTimePomodoro = config.breakTimePomodoro;
+        this.numCycles = config.numCycles;
+        this.numCyclesPomodoro = config.numPomodoroCycles;
     }
 
     void SetWorkTime(float workTime)

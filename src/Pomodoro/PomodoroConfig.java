@@ -21,6 +21,24 @@ public class PomodoroConfig
         this.breakTimePomodoro = breakTimePomodoro;
     }
 
+    public void update(int numCycles, float workTime, float breakTime, int numCyclesPomodoro, float breakTimePomodoro)
+    {
+        this.numCycles = numCycles;
+        this.workTime = workTime;
+        this.breakTime = breakTime;
+        this.numPomodoroCycles = numCyclesPomodoro;
+        this.breakTimePomodoro = breakTimePomodoro;
+    }
+
+    public void update(PomodoroConfig config)
+    {
+        this.numCycles = config.numCycles;
+        this.workTime = config.workTime;
+        this.breakTime = config.breakTime;
+        this.numPomodoroCycles = config.numPomodoroCycles;
+        this.breakTimePomodoro = config.breakTimePomodoro;
+    }
+
     public void SetWorkTime(float time){ workTime = time; }
     public void SetBreakTime(float time){ breakTime = time; }
     public void SetLongBreakTime(float time) { breakTimePomodoro = time; }

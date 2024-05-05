@@ -11,7 +11,6 @@ import java.io.IOException;
 
 public class Pomodoro extends JFrame
 {
-
     private JPanel main;
     private JTextField timerPresetsTextField;
     private JButton a55_5_Button;
@@ -65,6 +64,11 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                config.update(Integer.parseInt(numCyclesInput.getText()),
+                        Float.parseFloat(workTimeInput.getText()),
+                        Float.parseFloat(breakTimeInput.getText()),
+                        Integer.parseInt(numCyclesPomodoroInput.getText()),
+                        Float.parseFloat(longBreakTimeInput.getText()));
                 manager.startPomodoro(config);
             }
         });
@@ -75,6 +79,12 @@ public class Pomodoro extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 // TODO
+                config.update(Integer.parseInt(numCyclesInput.getText()),
+                        Float.parseFloat(workTimeInput.getText()),
+                        Float.parseFloat(breakTimeInput.getText()),
+                        Integer.parseInt(numCyclesPomodoroInput.getText()),
+                        Float.parseFloat(longBreakTimeInput.getText()));
+                manager.SetConfig(config);
                 manager.resetPomodoro();
             }
         });
@@ -204,7 +214,7 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-
+                //TODO
             }
         });
     }

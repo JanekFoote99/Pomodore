@@ -40,8 +40,13 @@ public class PomodoroManager
             curPomodoro.SetNumCyclesPomodoro(config.numPomodoroCycles);
             curPomodoro.SetNumCycles(config.numCycles);
 
+            // Error: for some reason the timer starts in the break Cycle
             //curPomodoro.resetTimer();
             curPomodoro.startWorkCycle();
         }
+    }
+
+    public void SetConfig(PomodoroConfig config){
+        curPomodoro.SetConfig(config);
     }
 }
