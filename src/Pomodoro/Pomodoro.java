@@ -167,7 +167,7 @@ public class Pomodoro extends JFrame
                 // Set Number of Pomodoro Cycles
                 try
                 {
-                    int numPomodoroCycles = Integer.parseInt(numCyclesInput.getText());
+                    int numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText());
                     if (numPomodoroCycles < 0 || numPomodoroCycles > 4)
                     {
                         JOptionPane.showMessageDialog(null, "Number of Pomodoro Cycles unchanged, enter a value between 0 and 4");
@@ -214,7 +214,11 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                //TODO
+                /*TODO: After clicking the Set as Preset Button the User should be able to Click on any given Preset
+                to change it. After clicking the given Preset a prompt should notify the user that the selected Preset
+                will be deleted. The Presets should be saved to a XML File so that the saved Presets remain the same
+                after starting the app again.
+                 */
             }
         });
     }

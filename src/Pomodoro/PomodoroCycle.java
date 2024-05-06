@@ -1,8 +1,13 @@
 package Pomodoro;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 
 public class PomodoroCycle
@@ -35,6 +40,8 @@ public class PomodoroCycle
     private float breakTimePomodoro;
     // Number of work/time cycles it takes to complete one Pomodoro
     private int numCyclesPomodoro;
+    private int curNumCyclesPomodoro = 1;
+
     private int numCycles;
     private int curNumCycles = 1;
     public int getCurNumCycles() { return curNumCycles; }
@@ -42,11 +49,16 @@ public class PomodoroCycle
     private JTextField timeDisplay;
     private JTextField numCyclesDisplay;
     private JTextField curCycleDisplay;
+    private JFrame frame;
     private JProgressBar timerBarDisplay;
 
     public boolean timerPaused;
     public boolean timerReset;
     private long timerPauseTime = 0;
+
+    static final String B_GREEN = "#238823";
+    static final String B_RED = "#D2222D";
+    static final String B_YELLOW = "#FFBF00";
 
     public PomodoroCycle()
     {
@@ -68,6 +80,7 @@ public class PomodoroCycle
 
     public PomodoroCycle(Pomodoro frame, float workTime, float breakTime, int numCycles)
     {
+        this.frame = frame;
         this.timeDisplay = frame.getTimerStatusText();
         this.curCycleDisplay = frame.getCycleDisplay();
         this.numCyclesDisplay = frame.getNumCycleDisplay();
@@ -82,6 +95,7 @@ public class PomodoroCycle
 
     public PomodoroCycle(Pomodoro frame, PomodoroConfig config)
     {
+        this.frame = frame;
         this.timeDisplay = frame.getTimerStatusText();
         this.curCycleDisplay = frame.getCycleDisplay();
         this.numCyclesDisplay = frame.getNumCycleDisplay();
@@ -142,6 +156,21 @@ public class PomodoroCycle
         timer.setInitialDelay(0);
     }
 
+    void playCycleTransitionSound(String soundpath)
+    {
+        try{
+            File soundFile = new File(soundpath);
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile.toURI().toURL());
+
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            clip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     private CycleType getCycle(CycleType curCycle){
         CycleType newCycle = curCycle;
 
@@ -153,21 +182,41 @@ public class PomodoroCycle
                     newCycle = CycleType.BREAK;
                     // set time of the next Cycle to breakTime
                     timerTime = (long)breakTime;
+
+                    frame.getContentPane().setBackground(Color.decode(B_RED));
                 } else
                 {
                     newCycle = CycleType.LONG_BREAK;
                     // set time of the next Cycle to breakTime
                     timerTime = (long)breakTimePomodoro;
+
+                    frame.getContentPane().setBackground(Color.decode(B_YELLOW));
                 }
+                playCycleTransitionSound("./Assets/audio/endBell.wav");
                 break;
             case BREAK:
                 newCycle = CycleType.WORK;
                 timerTime = (long)workTime;
                 curNumCycles++;
+
+                frame.getContentPane().setBackground(Color.decode(B_GREEN));
+                playCycleTransitionSound("./Assets/audio/startBell.wav");
                 break;
             case LONG_BREAK:
-                newCycle = CycleType.WORK;
-                timerTime = (long)workTime;
+                if(curNumCyclesPomodoro != numCycles){
+                    newCycle = CycleType.WORK;
+                    timerTime = (long)workTime;
+                    curNumCyclesPomodoro++;
+
+                    playCycleTransitionSound("./Assets/audio/startBell.wav");
+                    frame.getContentPane().setBackground(Color.decode(B_GREEN));
+                } else {
+                    newCycle = CycleType.OVER;
+
+                    // Add Bell to signal finish
+                    //playCycleTransitionSound("Assets/audio/endBell.wav");
+                    frame.getContentPane().setBackground(Color.WHITE);
+                }
                 break;
         }
 
@@ -235,6 +284,7 @@ public class PomodoroCycle
             //---------------------------------------------------------
             timerTime = (long)workTime;
             timer.start();
+            frame.getContentPane().setBackground(Color.decode(B_GREEN));
         }
     }
 
