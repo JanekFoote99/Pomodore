@@ -40,6 +40,57 @@ public class PomodoroCycle
     private float breakTimePomodoro;
     // Number of work/time cycles it takes to complete one Pomodoro
     private int numCyclesPomodoro;
+
+    public float getWorkTime()
+    {
+        return workTime;
+    }
+
+    public void setWorkTime(float workTime)
+    {
+        this.workTime = workTime;
+    }
+
+    public float getBreakTime()
+    {
+        return breakTime;
+    }
+
+    public void setBreakTime(float breakTime)
+    {
+        this.breakTime = breakTime;
+    }
+
+    public float getBreakTimePomodoro()
+    {
+        return breakTimePomodoro;
+    }
+
+    public void setBreakTimePomodoro(float breakTimePomodoro)
+    {
+        this.breakTimePomodoro = breakTimePomodoro;
+    }
+
+    public int getNumCyclesPomodoro()
+    {
+        return numCyclesPomodoro;
+    }
+
+    public void setNumCyclesPomodoro(int numCyclesPomodoro)
+    {
+        this.numCyclesPomodoro = numCyclesPomodoro;
+    }
+
+    public int getNumCycles()
+    {
+        return numCycles;
+    }
+
+    public void setNumCycles(int numCycles)
+    {
+        this.numCycles = numCycles;
+    }
+
     private int curNumCyclesPomodoro = 1;
 
     private int numCycles;
@@ -78,7 +129,7 @@ public class PomodoroCycle
         setupTimer();
     }
 
-    public PomodoroCycle(Pomodoro frame, float workTime, float breakTime, int numCycles)
+    public PomodoroCycle(Pomodoro frame, float workTime, float breakTime, float longBreakTime, int numCycles, int numCyclesPomodoro)
     {
         this.frame = frame;
         this.timeDisplay = frame.getTimerStatusText();
@@ -87,7 +138,10 @@ public class PomodoroCycle
 
         this.workTime = workTime;
         this.breakTime = breakTime;
+        this.breakTimePomodoro = longBreakTime;
         this.numCycles = numCycles;
+        this.numCyclesPomodoro = numCyclesPomodoro;
+
         this.curCycle = CycleType.WORK;
 
         setupTimer();
@@ -267,6 +321,8 @@ public class PomodoroCycle
     // TODO: Clean up Code
     public void startWorkCycle()
     {
+        // Reset has priority so that when both flags timerReset and timerPaused
+        // are true, the timer rather restarts than continue
         if (timerReset)
         {
             timerReset = false;
@@ -288,49 +344,12 @@ public class PomodoroCycle
         }
     }
 
-    public void startBreakCycle()
-    {
-
-    }
-
-    public void startLongBreakCycle()
-    {
-
-    }
-
-    void SetConfig(PomodoroConfig config){
+    public void SetConfig(PomodoroConfig config){
         this.workTime = config.workTime;
         this.breakTime = config.breakTime;
         this.breakTimePomodoro = config.breakTimePomodoro;
         this.numCycles = config.numCycles;
         this.numCyclesPomodoro = config.numPomodoroCycles;
-    }
-
-    void SetWorkTime(float workTime)
-    {
-        // TODO: Set Bounds for Worktime
-        this.workTime = workTime;
-    }
-
-    void SetBreakTime(float breakTime)
-    {
-        // TODO: Set Bounds for Breaktime
-        this.breakTime = breakTime;
-    }
-
-    void SetBreakTimePomodoro(float breakTimePomodoro)
-    {
-        this.breakTimePomodoro = breakTimePomodoro;
-    }
-
-    void SetNumCyclesPomodoro(int numCyclesPomodoro)
-    {
-        this.numCyclesPomodoro = numCyclesPomodoro;
-    }
-
-    void SetNumCycles(int numCycles)
-    {
-        this.numCycles = numCycles;
     }
 
     // Helper function to convert minutes to milliseconds

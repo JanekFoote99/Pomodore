@@ -12,41 +12,59 @@ public class PomodoroManager
         this.curPomodoro = new PomodoroCycle(frame, config);
     }
 
-    public void pausePomodoro(){
-        if(curPomodoro.timerPaused){
+    public void pausePomodoro()
+    {
+        if (curPomodoro.timerPaused)
+        {
             curPomodoro.timerPaused = false;
             curPomodoro.continueTimer();
-        }else{
+        } else
+        {
             curPomodoro.timerPaused = true;
             curPomodoro.pauseTimer();
         }
     }
 
-    public void resetPomodoro(){
+    public void resetPomodoro()
+    {
         curPomodoro.resetTimer();
     }
 
     public void startPomodoro(PomodoroConfig config)
     {
-        if (curPomodoro == null)
-        {
-            curPomodoro = new PomodoroCycle(frame, config.workTime, config.breakTime, config.numCycles);
+        boolean parameterChanges = false;
 
-            curPomodoro.startWorkCycle();
-        } else{
-            curPomodoro.SetWorkTime(config.workTime);
-            curPomodoro.SetBreakTime(config.breakTime);
-            curPomodoro.SetBreakTimePomodoro(config.breakTimePomodoro);
-            curPomodoro.SetNumCyclesPomodoro(config.numPomodoroCycles);
-            curPomodoro.SetNumCycles(config.numCycles);
-
-            // Error: for some reason the timer starts in the break Cycle
-            //curPomodoro.resetTimer();
-            curPomodoro.startWorkCycle();
+        if(curPomodoro.getWorkTime() != config.workTime){
+            curPomodoro.setWorkTime(config.workTime);
+            parameterChanges = true;
         }
+        if(curPomodoro.getBreakTime() != config.breakTime){
+            curPomodoro.setBreakTime(config.breakTime);
+            parameterChanges = true;
+        }
+        if(curPomodoro.getBreakTimePomodoro() != config.breakTimePomodoro){
+            curPomodoro.setBreakTimePomodoro(config.breakTimePomodoro);
+            parameterChanges = true;
+        }
+        if(curPomodoro.getNumCycles() != config.numCycles){
+            curPomodoro.setNumCycles(config.numCycles);
+            parameterChanges = true;
+        }
+        if(curPomodoro.getNumCyclesPomodoro() != config.numPomodoroCycles){
+            curPomodoro.setNumCyclesPomodoro(config.numPomodoroCycles);
+            parameterChanges = true;
+        }
+
+        // Error: for some reason the timer starts in the break Cycle
+        if(parameterChanges){
+            curPomodoro.resetTimer();
+        }
+
+        curPomodoro.startWorkCycle();
     }
 
-    public void SetConfig(PomodoroConfig config){
+    public void SetConfig(PomodoroConfig config)
+    {
         curPomodoro.SetConfig(config);
     }
 }
