@@ -13,9 +13,9 @@ public class Pomodoro extends JFrame
 {
     private JPanel main;
     private JTextField timerPresetsTextField;
-    private JButton a55_5_Button;
-    private JButton a45_15_Button;
-    private JButton a25_5_Button;
+    private JButton Preset3Button;
+    private JButton Preset2Button;
+    private JButton Preset1Button;
     private JProgressBar TimerBar;
     private JTextField customTimerTextField;
     private JTextField workTimeTextField;
@@ -60,6 +60,7 @@ public class Pomodoro extends JFrame
     private static Pomodoro pomodoro;
     private static PomodoroManager manager;
     private PomodoroConfig config;
+    private static XMLParser configParser;
 
     public Pomodoro()
     {
@@ -183,40 +184,47 @@ public class Pomodoro extends JFrame
                 }
             }
         });
-        a25_5_Button.addActionListener(new ActionListener()
+        Preset1Button.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                pomodoro.workTimeInput.setText("25");
-                pomodoro.breakTimeInput.setText("5");
-                pomodoro.longBreakTimeInput.setText("20");
-                pomodoro.numCyclesInput.setText("4");
-                pomodoro.numCyclesPomodoroInput.setText("1");
+                PomodoroConfig config = configParser.readPreset(0);
+
+                // TODO: Abstraction
+                pomodoro.workTimeInput.setText(String.format("%s", (long)config.workTime));
+                pomodoro.breakTimeInput.setText(String.format("%s", (long)config.breakTime));
+                pomodoro.longBreakTimeInput.setText(String.format("%s", (long)config.breakTimePomodoro));
+                pomodoro.numCyclesInput.setText(Integer.toString(config.numCycles));
+                pomodoro.numCyclesPomodoroInput.setText(Integer.toString(config.numPomodoroCycles));
             }
         });
-        a45_15_Button.addActionListener(new ActionListener()
+        Preset2Button.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                pomodoro.workTimeInput.setText("45");
-                pomodoro.breakTimeInput.setText("15");
-                pomodoro.longBreakTimeInput.setText("20");
-                pomodoro.numCyclesInput.setText("2");
-                pomodoro.numCyclesPomodoroInput.setText("1");
+                PomodoroConfig config = configParser.readPreset(1);
+
+                pomodoro.workTimeInput.setText(String.format("%s", (long)config.workTime));
+                pomodoro.breakTimeInput.setText(String.format("%s", (long)config.breakTime));
+                pomodoro.longBreakTimeInput.setText(String.format("%s", (long)config.breakTimePomodoro));
+                pomodoro.numCyclesInput.setText(Integer.toString(config.numCycles));
+                pomodoro.numCyclesPomodoroInput.setText(Integer.toString(config.numPomodoroCycles));
             }
         });
-        a55_5_Button.addActionListener(new ActionListener()
+        Preset3Button.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                pomodoro.workTimeInput.setText("55");
-                pomodoro.breakTimeInput.setText("5");
-                pomodoro.longBreakTimeInput.setText("20");
-                pomodoro.numCyclesInput.setText("2");
-                pomodoro.numCyclesPomodoroInput.setText("1");
+                PomodoroConfig config = configParser.readPreset(2);
+
+                pomodoro.workTimeInput.setText(String.format("%s", (long)config.workTime));
+                pomodoro.breakTimeInput.setText(String.format("%s", (long)config.breakTime));
+                pomodoro.longBreakTimeInput.setText(String.format("%s", (long)config.breakTimePomodoro));
+                pomodoro.numCyclesInput.setText(Integer.toString(config.numCycles));
+                pomodoro.numCyclesPomodoroInput.setText(Integer.toString(config.numPomodoroCycles));
             }
         });
         //TODO
@@ -236,6 +244,7 @@ public class Pomodoro extends JFrame
 
     private static void setup()
     {
+        configParser = new XMLParser("./PomodoroPresets.xml");
         pomodoro = new Pomodoro();
         pomodoro.createAndShowGUI();
         //pomodoro.setImages();

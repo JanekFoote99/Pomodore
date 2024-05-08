@@ -12,6 +12,14 @@ public class PomodoroConfig
 
     public int numCycles;
 
+    public PomodoroConfig(){
+        this.workTime = 25;
+        this.breakTime = 5;
+        this.breakTimePomodoro = 20;
+        this.numCycles = 4;
+        this.numPomodoroCycles = 1;
+    }
+
     public PomodoroConfig(int numCycles, float workTime, float breakTime, int numCyclesPomodoro, float breakTimePomodoro)
     {
         this.numCycles = numCycles;

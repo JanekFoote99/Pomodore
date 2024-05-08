@@ -40,7 +40,7 @@
           <text value="Work Time"/>
         </properties>
       </component>
-      <component id="bc247" class="javax.swing.JButton" binding="a25_5_Button">
+      <component id="bc247" class="javax.swing.JButton" binding="Preset1Button">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="97" height="30"/>
@@ -50,7 +50,7 @@
           <text value="25/5/20/4/1"/>
         </properties>
       </component>
-      <component id="bd6c2" class="javax.swing.JButton" binding="a45_15_Button">
+      <component id="bd6c2" class="javax.swing.JButton" binding="Preset2Button">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -58,7 +58,7 @@
           <text value="45/15/20/2/1"/>
         </properties>
       </component>
-      <component id="56615" class="javax.swing.JButton" binding="a55_5_Button">
+      <component id="56615" class="javax.swing.JButton" binding="Preset3Button">
         <constraints>
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
