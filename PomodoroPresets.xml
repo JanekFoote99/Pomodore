@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding"UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <presets>
 	<preset id="0">
 		<worktime>
 			25
-		<worktime>
+		</worktime>
 		<breaktime>
 			5
 		</breaktime>
@@ -20,7 +20,7 @@
 	<preset id="1">
 		<worktime>
 			45
-		<worktime>
+		</worktime>
 		<breaktime>
 			15
 		</breaktime>
@@ -37,7 +37,7 @@
 	<preset id="2">
 		<worktime>
 			55
-		<worktime>
+		</worktime>
 		<breaktime>
 			5
 		</breaktime>

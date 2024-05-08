@@ -39,6 +39,8 @@ public class Pomodoro extends JFrame
         return numCycleDisplay;
     }
 
+    public JTextField getNumPomodoroCycleDisplay() { return numPomodoroCycleDisplay; }
+
     private JTextField TimerStatusText;
     private JFormattedTextField breakTimeInput;
     private JButton SetInputButton;
@@ -52,6 +54,8 @@ public class Pomodoro extends JFrame
     private JFormattedTextField numCyclesInput;
     private JFormattedTextField numCyclesPomodoroInput;
     private JButton setAsPresetButton;
+    private JTextField numPomodoroCycleDisplay;
+    private JTextArea timerPresetsFollowTheTextArea;
 
     private static Pomodoro pomodoro;
     private static PomodoroManager manager;
@@ -78,7 +82,6 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                // TODO
                 config.update(Integer.parseInt(numCyclesInput.getText()),
                         Float.parseFloat(workTimeInput.getText()),
                         Float.parseFloat(breakTimeInput.getText()),
@@ -94,7 +97,6 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                // TODO
                 manager.pausePomodoro();
             }
         });
@@ -186,8 +188,11 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                pomodoro.config.workTime = 25.0f;
-                pomodoro.config.breakTime = 5.0f;
+                pomodoro.workTimeInput.setText("25");
+                pomodoro.breakTimeInput.setText("5");
+                pomodoro.longBreakTimeInput.setText("20");
+                pomodoro.numCyclesInput.setText("4");
+                pomodoro.numCyclesPomodoroInput.setText("1");
             }
         });
         a45_15_Button.addActionListener(new ActionListener()
@@ -195,8 +200,11 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                pomodoro.config.workTime = 45.0f;
-                pomodoro.config.breakTime = 15.0f;
+                pomodoro.workTimeInput.setText("45");
+                pomodoro.breakTimeInput.setText("15");
+                pomodoro.longBreakTimeInput.setText("20");
+                pomodoro.numCyclesInput.setText("2");
+                pomodoro.numCyclesPomodoroInput.setText("1");
             }
         });
         a55_5_Button.addActionListener(new ActionListener()
@@ -204,8 +212,11 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                pomodoro.config.workTime = 55.0f;
-                pomodoro.config.breakTime = 5.0f;
+                pomodoro.workTimeInput.setText("55");
+                pomodoro.breakTimeInput.setText("5");
+                pomodoro.longBreakTimeInput.setText("20");
+                pomodoro.numCyclesInput.setText("2");
+                pomodoro.numCyclesPomodoroInput.setText("1");
             }
         });
         //TODO
@@ -255,7 +266,7 @@ public class Pomodoro extends JFrame
         pomodoro.setVisible(true);
         pomodoro.setContentPane(pomodoro.main);
         pomodoro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pomodoro.config = new PomodoroConfig(4, 25.0f, 5.0f, 1, 20.0f);
+        pomodoro.config = new PomodoroConfig(4, 25.0f, 5.0f, 2, 20.0f);
         // Center window
         pomodoro.setLocationRelativeTo(null);
     }

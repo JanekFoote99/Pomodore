@@ -38,9 +38,6 @@ public class PomodoroCycle
     private float breakTime;
     // Break Time between two Pomodoro Cycles
     private float breakTimePomodoro;
-    // Number of work/time cycles it takes to complete one Pomodoro
-    private int numCyclesPomodoro;
-
     public float getWorkTime()
     {
         return workTime;
@@ -91,14 +88,19 @@ public class PomodoroCycle
         this.numCycles = numCycles;
     }
 
+
+    // Number of work/time cycles it takes to complete one Pomodoro
+    private int numCyclesPomodoro;
     private int curNumCyclesPomodoro = 1;
 
     private int numCycles;
     private int curNumCycles = 1;
+
     public int getCurNumCycles() { return curNumCycles; }
 
     private JTextField timeDisplay;
     private JTextField numCyclesDisplay;
+    private JTextField numPomodoroCycleDisplay;
     private JTextField curCycleDisplay;
     private JFrame frame;
     private JProgressBar timerBarDisplay;
@@ -132,6 +134,7 @@ public class PomodoroCycle
     public PomodoroCycle(Pomodoro frame, float workTime, float breakTime, float longBreakTime, int numCycles, int numCyclesPomodoro)
     {
         this.frame = frame;
+        this.numPomodoroCycleDisplay = frame.getNumPomodoroCycleDisplay();
         this.timeDisplay = frame.getTimerStatusText();
         this.curCycleDisplay = frame.getCycleDisplay();
         this.numCyclesDisplay = frame.getNumCycleDisplay();
@@ -150,6 +153,7 @@ public class PomodoroCycle
     public PomodoroCycle(Pomodoro frame, PomodoroConfig config)
     {
         this.frame = frame;
+        this.numPomodoroCycleDisplay = frame.getNumPomodoroCycleDisplay();
         this.timeDisplay = frame.getTimerStatusText();
         this.curCycleDisplay = frame.getCycleDisplay();
         this.numCyclesDisplay = frame.getNumCycleDisplay();
@@ -160,6 +164,14 @@ public class PomodoroCycle
         this.curCycle = CycleType.WORK;
 
         setupTimer();
+    }
+
+    private void setup(){
+
+    }
+
+    private void setupDisplays(){
+
     }
 
     private void setupTimer()
@@ -187,13 +199,13 @@ public class PomodoroCycle
                     // new Timer begins, reset startTime
                     startTime = curTime;
 
-                    if(curCycle != CycleType.OVER)
+                    if(curCycle == CycleType.OVER)
                     {
-                        timer.restart();
+                        timer.stop();
                     }
                     else
                     {
-                        timer.stop();
+                        timer.restart();
                     }
                 }
 
@@ -204,6 +216,7 @@ public class PomodoroCycle
                 SimpleDateFormat df = new SimpleDateFormat("mm:ss");
                 timeDisplay.setText(df.format(remainingTime) + " / " + df.format(MinutesToMilliseconds(timerTime)));
                 curCycleDisplay.setText(curCycle.toString());
+                numPomodoroCycleDisplay.setText(curNumCyclesPomodoro + " / " + numCyclesPomodoro);
                 numCyclesDisplay.setText(curNumCycles + " / " + numCycles);
             }
         });
@@ -237,6 +250,7 @@ public class PomodoroCycle
                     // set time of the next Cycle to breakTime
                     timerTime = (long)breakTime;
 
+                    playCycleTransitionSound("./Assets/audio/endBell.wav");
                     frame.getContentPane().setBackground(Color.decode(B_RED));
                 } else
                 {
@@ -244,9 +258,9 @@ public class PomodoroCycle
                     // set time of the next Cycle to breakTime
                     timerTime = (long)breakTimePomodoro;
 
+                    playCycleTransitionSound("Assets/audio/success.wav");
                     frame.getContentPane().setBackground(Color.decode(B_YELLOW));
                 }
-                playCycleTransitionSound("./Assets/audio/endBell.wav");
                 break;
             case BREAK:
                 newCycle = CycleType.WORK;
@@ -257,9 +271,11 @@ public class PomodoroCycle
                 playCycleTransitionSound("./Assets/audio/startBell.wav");
                 break;
             case LONG_BREAK:
-                if(curNumCyclesPomodoro != numCycles){
+                if(curNumCyclesPomodoro != numCyclesPomodoro){
                     newCycle = CycleType.WORK;
                     timerTime = (long)workTime;
+
+                    curNumCycles = 1;
                     curNumCyclesPomodoro++;
 
                     playCycleTransitionSound("./Assets/audio/startBell.wav");
@@ -268,10 +284,16 @@ public class PomodoroCycle
                     newCycle = CycleType.OVER;
 
                     // Add Bell to signal finish
-                    //playCycleTransitionSound("Assets/audio/endBell.wav");
+                    resetTimer();
                     frame.getContentPane().setBackground(Color.WHITE);
                 }
                 break;
+            case OVER:
+                newCycle = CycleType.WORK;
+                timerTime = (long)workTime;
+
+                playCycleTransitionSound("./Assets/audio/startBell.wav");
+                frame.getContentPane().setBackground(Color.decode(B_GREEN));
         }
 
         return newCycle;
@@ -314,11 +336,15 @@ public class PomodoroCycle
         timer.stop();
 
         curNumCycles = 1;
+        curNumCyclesPomodoro = 1;
+
         timerPaused = true;
         timerReset = true;
     }
 
-    // TODO: Clean up Code
+    // TODO: Clean up and fix Code
+    // Starting the Cycle the first time causes to go through the first if branch due to parameters
+    // Setting timerReset to false at the start causes to bug the pause function due to resetting the timer
     public void startWorkCycle()
     {
         // Reset has priority so that when both flags timerReset and timerPaused
@@ -327,6 +353,8 @@ public class PomodoroCycle
         {
             timerReset = false;
             timerPaused = false;
+
+            frame.getContentPane().setBackground(Color.decode(B_GREEN));
             timerTime = (long)workTime;
             timer.restart();
         } else if (timerPaused)
@@ -336,6 +364,7 @@ public class PomodoroCycle
         {
             // TODO: create abstraction
             numCyclesDisplay.setText(curNumCycles + " / " + numCycles);
+            numPomodoroCycleDisplay.setText(curNumCyclesPomodoro + " / " + numCyclesPomodoro);
             curCycleDisplay.setText(curCycle.toString());
             //---------------------------------------------------------
             timerTime = (long)workTime;
