@@ -1,21 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<presets>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><presets>
 	<preset id="0">
-		<worktime>
-			25
-		</worktime>
-		<breaktime>
-			5
-		</breaktime>
-		<longbreaktime>
-			20
-		</longbreaktime>
-		<numCycles>
-			4
-		</numCycles>
-		<numPomodoroCycles>
-			1
-		</numPomodoroCycles>
+		<worktime>20.0</worktime>
+		<breaktime>3.0</breaktime>
+		<longbreaktime>6.0</longbreaktime>
+		<numCycles>4</numCycles>
+		<numPomodoroCycles>2</numPomodoroCycles>
 	</preset>
 	<preset id="1">
 		<worktime>

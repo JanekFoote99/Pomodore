@@ -39,7 +39,10 @@ public class Pomodoro extends JFrame
         return numCycleDisplay;
     }
 
-    public JTextField getNumPomodoroCycleDisplay() { return numPomodoroCycleDisplay; }
+    public JTextField getNumPomodoroCycleDisplay()
+    {
+        return numPomodoroCycleDisplay;
+    }
 
     private JTextField TimerStatusText;
     private JFormattedTextField breakTimeInput;
@@ -55,12 +58,15 @@ public class Pomodoro extends JFrame
     private JFormattedTextField numCyclesPomodoroInput;
     private JButton setAsPresetButton;
     private JTextField numPomodoroCycleDisplay;
-    private JTextArea timerPresetsFollowTheTextArea;
+    private JTextField presetInfoText;
 
     private static Pomodoro pomodoro;
     private static PomodoroManager manager;
     private PomodoroConfig config;
+    private PomodoroConfig toSaveConfig;
     private static XMLParser configParser;
+
+    private boolean savePreset = false;
 
     public Pomodoro()
     {
@@ -189,14 +195,16 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                PomodoroConfig config = configParser.readPreset(0);
+                if(savePreset)
+                {
+                    configParser.writePreset(toSaveConfig, 0);
+                    savePreset = false;
+                    setPresetButtonColors(Color.YELLOW);
+                } else{
+                    PomodoroConfig config = configParser.readPreset(0);
 
-                // TODO: Abstraction
-                pomodoro.workTimeInput.setText(String.format("%s", (long)config.workTime));
-                pomodoro.breakTimeInput.setText(String.format("%s", (long)config.breakTime));
-                pomodoro.longBreakTimeInput.setText(String.format("%s", (long)config.breakTimePomodoro));
-                pomodoro.numCyclesInput.setText(Integer.toString(config.numCycles));
-                pomodoro.numCyclesPomodoroInput.setText(Integer.toString(config.numPomodoroCycles));
+                    setTextFields(config);
+                }
             }
         });
         Preset2Button.addActionListener(new ActionListener()
@@ -204,13 +212,16 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                PomodoroConfig config = configParser.readPreset(1);
+                if(savePreset)
+                {
+                    configParser.writePreset(toSaveConfig, 1);
+                    savePreset = false;
+                    setPresetButtonColors(Color.YELLOW);
+                } else{
+                    PomodoroConfig config = configParser.readPreset(1);
 
-                pomodoro.workTimeInput.setText(String.format("%s", (long)config.workTime));
-                pomodoro.breakTimeInput.setText(String.format("%s", (long)config.breakTime));
-                pomodoro.longBreakTimeInput.setText(String.format("%s", (long)config.breakTimePomodoro));
-                pomodoro.numCyclesInput.setText(Integer.toString(config.numCycles));
-                pomodoro.numCyclesPomodoroInput.setText(Integer.toString(config.numPomodoroCycles));
+                    setTextFields(config);
+                }
             }
         });
         Preset3Button.addActionListener(new ActionListener()
@@ -218,28 +229,67 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                PomodoroConfig config = configParser.readPreset(2);
+                if(savePreset)
+                {
+                    configParser.writePreset(toSaveConfig, 2);
+                    savePreset = false;
+                    setPresetButtonColors(Color.YELLOW);
+                } else{
+                    PomodoroConfig config = configParser.readPreset(2);
 
-                pomodoro.workTimeInput.setText(String.format("%s", (long)config.workTime));
-                pomodoro.breakTimeInput.setText(String.format("%s", (long)config.breakTime));
-                pomodoro.longBreakTimeInput.setText(String.format("%s", (long)config.breakTimePomodoro));
-                pomodoro.numCyclesInput.setText(Integer.toString(config.numCycles));
-                pomodoro.numCyclesPomodoroInput.setText(Integer.toString(config.numPomodoroCycles));
+                    setTextFields(config);
+                }
             }
         });
-        //TODO
+
+        /*TODO: After clicking the Set as Preset Button the User should be able to Click on any given Preset
+                to change it. After clicking the given Preset a prompt should notify the user that the selected Preset
+                will be deleted. The Presets should be saved to a XML File so that the saved Presets remain the same
+                after starting the app again. */
         setAsPresetButton.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                /*TODO: After clicking the Set as Preset Button the User should be able to Click on any given Preset
-                to change it. After clicking the given Preset a prompt should notify the user that the selected Preset
-                will be deleted. The Presets should be saved to a XML File so that the saved Presets remain the same
-                after starting the app again.
-                 */
+                if (savePreset)
+                {
+                    setPresetButtonColors(Color.WHITE);
+
+                    savePreset = false;
+                    presetInfoText.setEnabled(false);
+                } else
+                {
+                    float worktime = Float.parseFloat(workTimeInput.getText().trim());
+                    float breaktime = Float.parseFloat(breakTimeInput.getText().trim());
+                    float longbreaktime = Float.parseFloat(longBreakTimeInput.getText().trim());
+                    int numcycles = Integer.parseInt(numCyclesInput.getText().trim());
+                    int numcyclespomodoro = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
+
+                    toSaveConfig = new PomodoroConfig(numcycles, worktime, breaktime, numcyclespomodoro, longbreaktime);
+
+                    setPresetButtonColors(Color.YELLOW);
+
+                    savePreset = true;
+                    presetInfoText.setEnabled(true);
+                }
             }
         });
+    }
+
+    private void setPresetButtonColors(Color color)
+    {
+        Preset1Button.setBackground(color);
+        Preset2Button.setBackground(color);
+        Preset3Button.setBackground(color);
+    }
+
+    private void setTextFields(PomodoroConfig newConfig)
+    {
+        pomodoro.workTimeInput.setText(String.format("%s", (long) newConfig.workTime));
+        pomodoro.breakTimeInput.setText(String.format("%s", (long) newConfig.breakTime));
+        pomodoro.longBreakTimeInput.setText(String.format("%s", (long) newConfig.breakTimePomodoro));
+        pomodoro.numCyclesInput.setText(Integer.toString(newConfig.numCycles));
+        pomodoro.numCyclesPomodoroInput.setText(Integer.toString(newConfig.numPomodoroCycles));
     }
 
     private static void setup()
