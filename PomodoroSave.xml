@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><presets>
+	<worktime>45</worktime>
+	<breaktime>15</breaktime>
+	<longbreaktime>4</longbreaktime>
+	<numCycles>4</numCycles>
+	<numPomodoroCycles>2</numPomodoroCycles>
+</presets>

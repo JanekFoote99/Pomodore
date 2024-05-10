@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -195,12 +197,11 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if(savePreset)
+                if (savePreset)
                 {
-                    configParser.writePreset(toSaveConfig, 0);
-                    savePreset = false;
-                    setPresetButtonColors(Color.YELLOW);
-                } else{
+                    savePreset(0);
+                } else
+                {
                     PomodoroConfig config = configParser.readPreset(0);
 
                     setTextFields(config);
@@ -212,12 +213,11 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if(savePreset)
+                if (savePreset)
                 {
-                    configParser.writePreset(toSaveConfig, 1);
-                    savePreset = false;
-                    setPresetButtonColors(Color.YELLOW);
-                } else{
+                    savePreset(1);
+                } else
+                {
                     PomodoroConfig config = configParser.readPreset(1);
 
                     setTextFields(config);
@@ -229,12 +229,11 @@ public class Pomodoro extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if(savePreset)
+                if (savePreset)
                 {
-                    configParser.writePreset(toSaveConfig, 2);
-                    savePreset = false;
-                    setPresetButtonColors(Color.YELLOW);
-                } else{
+                    savePreset(2);
+                } else
+                {
                     PomodoroConfig config = configParser.readPreset(2);
 
                     setTextFields(config);
@@ -274,6 +273,33 @@ public class Pomodoro extends JFrame
                 }
             }
         });
+
+        addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                PomodoroConfig toSave = new PomodoroConfig();
+
+                toSave.workTime = Integer.parseInt(workTimeInput.getText().trim());
+                toSave.breakTime = Integer.parseInt(breakTimeInput.getText().trim());
+                toSave.breakTimePomodoro = Integer.parseInt(longBreakTimeInput.getText().trim());
+                toSave.numCycles = Integer.parseInt(numCyclesInput.getText().trim());
+                toSave.numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
+
+                configParser.writeTextFields(toSave);
+            }
+        });
+    }
+
+    private void savePreset(int presetId)
+    {
+        configParser.writePreset(toSaveConfig, presetId);
+        setButtonTextField(presetId, toSaveConfig);
+
+        savePreset = false;
+        presetInfoText.setEnabled(false);
+        setPresetButtonColors(Color.WHITE);
     }
 
     private void setPresetButtonColors(Color color)
@@ -292,9 +318,21 @@ public class Pomodoro extends JFrame
         pomodoro.numCyclesPomodoroInput.setText(Integer.toString(newConfig.numPomodoroCycles));
     }
 
+    private void setButtonTextField(int presetId, PomodoroConfig newConfig)
+    {
+        String formattedText = STR."\{String.format("%s", (long) newConfig.workTime)}/\{String.format("%s", (long) newConfig.breakTime)}/\{String.format("%s", (long) newConfig.breakTimePomodoro)}/\{Integer.toString(newConfig.numCycles)}/\{Integer.toString((newConfig.numPomodoroCycles))}";
+
+        if(presetId == 0)
+            Preset1Button.setText(formattedText);
+        else if(presetId == 1)
+            Preset2Button.setText(formattedText);
+        else if(presetId == 2)
+            Preset3Button.setText(formattedText);
+    }
+
     private static void setup()
     {
-        configParser = new XMLParser("./PomodoroPresets.xml");
+        configParser = new XMLParser("./PomodoroPresets.xml", "./PomodoroSave.xml");
         pomodoro = new Pomodoro();
         pomodoro.createAndShowGUI();
         //pomodoro.setImages();
@@ -328,6 +366,27 @@ public class Pomodoro extends JFrame
         pomodoro.config = new PomodoroConfig(4, 25.0f, 5.0f, 2, 20.0f);
         // Center window
         pomodoro.setLocationRelativeTo(null);
+
+        setButtonTextFieldsOnStartup();
+        setCustomTimerTextField();
+    }
+
+    private void setButtonTextFieldsOnStartup()
+    {
+        setButtonTextField(0, configParser.readPreset(0));
+        setButtonTextField(1, configParser.readPreset(1));
+        setButtonTextField(2, configParser.readPreset(2));
+    }
+
+    private void setCustomTimerTextField()
+    {
+        PomodoroConfig toWriteConfig = configParser.readTextFields();
+
+        workTimeInput.setText(String.format("%s", (long) toWriteConfig.workTime));
+        breakTimeInput.setText(String.format("%s", (long) toWriteConfig.breakTime));
+        longBreakTimeInput.setText(String.format("%s", (long) toWriteConfig.breakTimePomodoro));
+        numCyclesInput.setText(Integer.toString(toWriteConfig.numCycles));
+        numCyclesPomodoroInput.setText(Integer.toString(toWriteConfig.numPomodoroCycles));
     }
 
     public static void main(String[] args)
