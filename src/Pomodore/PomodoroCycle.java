@@ -1,4 +1,4 @@
-package Pomodoro;
+package Pomodore;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 
 public class PomodoroCycle
@@ -21,7 +20,7 @@ public class PomodoroCycle
         Work -> Break ->
         Work -> Break/Long_Break
      */
-    enum CycleType
+    public enum CycleType
     {
         WORK,
         BREAK,
@@ -31,6 +30,9 @@ public class PomodoroCycle
 
     // Flag to determine which Cycle the variable startTime represents
     private CycleType curCycle;
+
+    public CycleType getCurCycle () { return curCycle; }
+
     private long startTime = -1;
     private long timerTime = -1;
 
@@ -38,6 +40,7 @@ public class PomodoroCycle
     private float breakTime;
     // Break Time between two Pomodoro Cycles
     private float breakTimePomodoro;
+
     public float getWorkTime()
     {
         return workTime;
@@ -96,7 +99,17 @@ public class PomodoroCycle
     private int numCycles;
     private int curNumCycles = 1;
 
-    public int getCurNumCycles() { return curNumCycles; }
+    private long remainingTime = -1;
+
+    public long getRemainingTime()
+    {
+        return remainingTime;
+    }
+
+    public int getCurNumCycles()
+    {
+        return curNumCycles;
+    }
 
     private JTextField timeDisplay;
     private JTextField numCyclesDisplay;
@@ -122,7 +135,8 @@ public class PomodoroCycle
     }
 
     // Testing
-    public PomodoroCycle(PomodoroConfig config){
+    public PomodoroCycle(PomodoroConfig config)
+    {
         this.workTime = config.workTime;
         this.breakTime = config.breakTime;
         this.numCycles = config.numCycles;
@@ -131,13 +145,14 @@ public class PomodoroCycle
         setupTimer();
     }
 
-    public PomodoroCycle(Pomodoro frame, float workTime, float breakTime, float longBreakTime, int numCycles, int numCyclesPomodoro)
+    public PomodoroCycle(Pomodore frame, float workTime, float breakTime, float longBreakTime, int numCycles, int numCyclesPomodoro)
     {
         this.frame = frame;
         this.numPomodoroCycleDisplay = frame.getNumPomodoroCycleDisplay();
         this.timeDisplay = frame.getTimerStatusText();
         this.curCycleDisplay = frame.getCycleDisplay();
         this.numCyclesDisplay = frame.getNumCycleDisplay();
+        this.timerBarDisplay = frame.getTimerBar();
 
         this.workTime = workTime;
         this.breakTime = breakTime;
@@ -150,13 +165,14 @@ public class PomodoroCycle
         setupTimer();
     }
 
-    public PomodoroCycle(Pomodoro frame, PomodoroConfig config)
+    public PomodoroCycle(Pomodore frame, PomodoroConfig config)
     {
         this.frame = frame;
         this.numPomodoroCycleDisplay = frame.getNumPomodoroCycleDisplay();
         this.timeDisplay = frame.getTimerStatusText();
         this.curCycleDisplay = frame.getCycleDisplay();
         this.numCyclesDisplay = frame.getNumCycleDisplay();
+        this.timerBarDisplay = frame.getTimerBar();
 
         this.workTime = config.workTime;
         this.breakTime = config.breakTime;
@@ -166,11 +182,13 @@ public class PomodoroCycle
         setupTimer();
     }
 
-    private void setup(){
+    private void setup()
+    {
 
     }
 
-    private void setupDisplays(){
+    private void setupDisplays()
+    {
 
     }
 
@@ -199,19 +217,21 @@ public class PomodoroCycle
                     // new Timer begins, reset startTime
                     startTime = curTime;
 
-                    if(curCycle == CycleType.OVER)
+                    if (curCycle == CycleType.OVER)
                     {
                         timer.stop();
-                    }
-                    else
+                    } else
                     {
                         timer.restart();
                     }
                 }
 
-                long remainingTime = MinutesToMilliseconds(timerTime) - delta;
+                remainingTime = MinutesToMilliseconds(timerTime) - delta;
 
-                //timerBarDisplay.setValue(50);
+                long temp = MinutesToMilliseconds(timerTime);
+
+                float percentage = (1 - (float) remainingTime / temp) * 100;
+                timerBarDisplay.setValue((int) percentage);
 
                 SimpleDateFormat df = new SimpleDateFormat("mm:ss");
                 timeDisplay.setText(df.format(remainingTime) + " / " + df.format(MinutesToMilliseconds(timerTime)));
@@ -225,7 +245,8 @@ public class PomodoroCycle
 
     void playCycleTransitionSound(String soundpath)
     {
-        try{
+        try
+        {
             File soundFile = new File(soundpath);
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile.toURI().toURL());
 
@@ -238,7 +259,8 @@ public class PomodoroCycle
         }
     }
 
-    private CycleType getCycle(CycleType curCycle){
+    private CycleType getCycle(CycleType curCycle)
+    {
         CycleType newCycle = curCycle;
 
         switch (curCycle)
@@ -248,7 +270,7 @@ public class PomodoroCycle
                 {
                     newCycle = CycleType.BREAK;
                     // set time of the next Cycle to breakTime
-                    timerTime = (long)breakTime;
+                    timerTime = (long) breakTime;
 
                     playCycleTransitionSound("./Assets/audio/endBell.wav");
                     frame.getContentPane().setBackground(Color.decode(B_RED));
@@ -256,7 +278,7 @@ public class PomodoroCycle
                 {
                     newCycle = CycleType.LONG_BREAK;
                     // set time of the next Cycle to breakTime
-                    timerTime = (long)breakTimePomodoro;
+                    timerTime = (long) breakTimePomodoro;
 
                     playCycleTransitionSound("Assets/audio/success.wav");
                     frame.getContentPane().setBackground(Color.decode(B_YELLOW));
@@ -264,33 +286,35 @@ public class PomodoroCycle
                 break;
             case BREAK:
                 newCycle = CycleType.WORK;
-                timerTime = (long)workTime;
+                timerTime = (long) workTime;
                 curNumCycles++;
 
                 frame.getContentPane().setBackground(Color.decode(B_GREEN));
                 playCycleTransitionSound("./Assets/audio/startBell.wav");
                 break;
             case LONG_BREAK:
-                if(curNumCyclesPomodoro != numCyclesPomodoro){
+                if (curNumCyclesPomodoro != numCyclesPomodoro)
+                {
                     newCycle = CycleType.WORK;
-                    timerTime = (long)workTime;
+                    timerTime = (long) workTime;
 
                     curNumCycles = 1;
                     curNumCyclesPomodoro++;
 
                     playCycleTransitionSound("./Assets/audio/startBell.wav");
                     frame.getContentPane().setBackground(Color.decode(B_GREEN));
-                } else {
+                } else
+                {
                     newCycle = CycleType.OVER;
 
                     // Add Bell to signal finish
                     resetTimer();
-                    frame.getContentPane().setBackground(Color.WHITE);
+                    frame.getContentPane().setBackground(Color.GRAY);
                 }
                 break;
             case OVER:
                 newCycle = CycleType.WORK;
-                timerTime = (long)workTime;
+                timerTime = (long) workTime;
 
                 playCycleTransitionSound("./Assets/audio/startBell.wav");
                 frame.getContentPane().setBackground(Color.decode(B_GREEN));
@@ -315,6 +339,10 @@ public class PomodoroCycle
     {
         if (!timerReset)
         {
+            /* Special case
+             the Time between pausing the timer and resetting would be getting added to the remaining time
+             so the timer keeps running "in the back" while not displaying the change */
+
             // Calculate dif between pause and resume
             timerPauseTime = System.currentTimeMillis() - timerPauseTime;
             // Add the needed time to the startTime, so that the remaining time is calculated correctly
@@ -324,8 +352,6 @@ public class PomodoroCycle
 
             timer.start();
         }
-        // Special case
-        // the Time between pausing the timer and resetting would be getting added to the remaining time
     }
 
     public void resetTimer()
@@ -338,6 +364,7 @@ public class PomodoroCycle
         curNumCycles = 1;
         curNumCyclesPomodoro = 1;
 
+        frame.getContentPane().setBackground(Color.GRAY);
         timerPaused = true;
         timerReset = true;
     }
@@ -354,8 +381,12 @@ public class PomodoroCycle
             timerReset = false;
             timerPaused = false;
 
+            numCyclesDisplay.setText(curNumCycles + " / " + numCycles);
+            numPomodoroCycleDisplay.setText(curNumCyclesPomodoro + " / " + numCyclesPomodoro);
+            curCycleDisplay.setText(curCycle.toString());
+
             frame.getContentPane().setBackground(Color.decode(B_GREEN));
-            timerTime = (long)workTime;
+            timerTime = (long) workTime;
             timer.restart();
         } else if (timerPaused)
         {
@@ -367,13 +398,14 @@ public class PomodoroCycle
             numPomodoroCycleDisplay.setText(curNumCyclesPomodoro + " / " + numCyclesPomodoro);
             curCycleDisplay.setText(curCycle.toString());
             //---------------------------------------------------------
-            timerTime = (long)workTime;
+            timerTime = (long) workTime;
             timer.start();
             frame.getContentPane().setBackground(Color.decode(B_GREEN));
         }
     }
 
-    public void SetConfig(PomodoroConfig config){
+    public void SetConfig(PomodoroConfig config)
+    {
         this.workTime = config.workTime;
         this.breakTime = config.breakTime;
         this.breakTimePomodoro = config.breakTimePomodoro;

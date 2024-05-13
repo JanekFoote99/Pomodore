@@ -1,4 +1,4 @@
-package Pomodoro;
+package Pomodore;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,14 +11,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Pomodoro extends JFrame
+public class Pomodore extends JFrame
 {
     private JPanel main;
     private JTextField timerPresetsTextField;
     private JButton Preset3Button;
     private JButton Preset2Button;
     private JButton Preset1Button;
-    private JProgressBar TimerBar;
+    private JProgressBar timerBar;
     private JTextField customTimerTextField;
     private JTextField workTimeTextField;
     private JTextField breakTimeTextField;
@@ -46,6 +46,8 @@ public class Pomodoro extends JFrame
         return numPomodoroCycleDisplay;
     }
 
+    public JProgressBar getTimerBar() { return timerBar; }
+
     private JTextField TimerStatusText;
     private JFormattedTextField breakTimeInput;
     private JButton SetInputButton;
@@ -62,7 +64,7 @@ public class Pomodoro extends JFrame
     private JTextField numPomodoroCycleDisplay;
     private JTextField presetInfoText;
 
-    private static Pomodoro pomodoro;
+    private static Pomodore pomodoro;
     private static PomodoroManager manager;
     private PomodoroConfig config;
     private PomodoroConfig toSaveConfig;
@@ -70,7 +72,7 @@ public class Pomodoro extends JFrame
 
     private boolean savePreset = false;
 
-    public Pomodoro()
+    public Pomodore()
     {
         Start.addActionListener(new ActionListener()
         {
@@ -320,7 +322,11 @@ public class Pomodoro extends JFrame
 
     private void setButtonTextField(int presetId, PomodoroConfig newConfig)
     {
-        String formattedText = STR."\{String.format("%s", (long) newConfig.workTime)}/\{String.format("%s", (long) newConfig.breakTime)}/\{String.format("%s", (long) newConfig.breakTimePomodoro)}/\{Integer.toString(newConfig.numCycles)}/\{Integer.toString((newConfig.numPomodoroCycles))}";
+        String formattedText =  String.format("%s", (long) newConfig.workTime) + "/" +
+                String.format("%s", (long) newConfig.breakTime) + "/" +
+                String.format("%s", (long) newConfig.breakTimePomodoro) + "/" +
+                String.format("%s", (long) newConfig.numCycles) + "/" +
+                String.format("%s", (long) newConfig.numPomodoroCycles);
 
         if(presetId == 0)
             Preset1Button.setText(formattedText);
@@ -333,7 +339,7 @@ public class Pomodoro extends JFrame
     private static void setup()
     {
         configParser = new XMLParser("./PomodoroPresets.xml", "./PomodoroSave.xml");
-        pomodoro = new Pomodoro();
+        pomodoro = new Pomodore();
         pomodoro.createAndShowGUI();
         //pomodoro.setImages();
         manager = new PomodoroManager(pomodoro.config, pomodoro);
@@ -367,6 +373,8 @@ public class Pomodoro extends JFrame
         // Center window
         pomodoro.setLocationRelativeTo(null);
 
+        timerBar.setForeground(Color.BLACK);
+
         setButtonTextFieldsOnStartup();
         setCustomTimerTextField();
     }
@@ -391,6 +399,6 @@ public class Pomodoro extends JFrame
 
     public static void main(String[] args)
     {
-        SwingUtilities.invokeLater(Pomodoro::setup);
+        SwingUtilities.invokeLater(Pomodore::setup);
     }
 }

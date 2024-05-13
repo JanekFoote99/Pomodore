@@ -7,9 +7,9 @@
 		<numPomodoroCycles>2</numPomodoroCycles>
 	</preset>
 	<preset id="1">
-		<worktime>45</worktime>
-		<breaktime>15</breaktime>
-		<longbreaktime>4</longbreaktime>
+		<worktime>2</worktime>
+		<breaktime>1</breaktime>
+		<longbreaktime>2</longbreaktime>
 		<numCycles>4</numCycles>
 		<numPomodoroCycles>2</numPomodoroCycles>
 	</preset>

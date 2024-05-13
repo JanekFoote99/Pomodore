@@ -1,4 +1,4 @@
-package Pomodoro;
+package Pomodore;
 
 public class PomodoroConfig
 {

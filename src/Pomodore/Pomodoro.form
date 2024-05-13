@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Pomodoro.Pomodoro">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Pomodore.Pomodore">
   <grid id="27dc6" binding="main" layout-manager="GridLayoutManager" row-count="11" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
@@ -232,12 +232,6 @@
           <text value="Reset"/>
         </properties>
       </component>
-      <component id="ab718" class="javax.swing.JProgressBar" binding="TimerBar">
-        <constraints>
-          <grid row="10" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-      </component>
       <component id="79f98" class="javax.swing.JButton" binding="setAsPresetButton">
         <constraints>
           <grid row="7" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -279,6 +273,12 @@
           <text value="Choose Preset Slot"/>
           <visible value="true"/>
         </properties>
+      </component>
+      <component id="ab718" class="javax.swing.JProgressBar" binding="timerBar">
+        <constraints>
+          <grid row="10" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
       </component>
     </children>
   </grid>

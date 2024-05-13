@@ -1,12 +1,12 @@
-package Pomodoro;
+package Pomodore;
 
 public class PomodoroManager
 {
     private PomodoroCycle curPomodoro;
-    private final Pomodoro frame;
+    private final Pomodore frame;
     private long startTimePomodoro;
 
-    public PomodoroManager(PomodoroConfig config, Pomodoro frame)
+    public PomodoroManager(PomodoroConfig config, Pomodore frame)
     {
         this.frame = frame;
         this.curPomodoro = new PomodoroCycle(frame, config);

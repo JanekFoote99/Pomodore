@@ -1,4 +1,4 @@
-package Pomodoro;
+package Pomodore;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
