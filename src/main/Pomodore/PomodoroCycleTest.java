@@ -1,5 +1,8 @@
-package Pomodore;
+package main.Pomodore;
 
+import main.Pomodore.Pomodore;
+import main.Pomodore.PomodoroConfig;
+import main.Pomodore.PomodoroCycle;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +34,7 @@ class PomodoroCycleTest
     }
 
     @Test
-    void getCycleTest()
+    void getCycle()
     {
         cycle.startWorkCycle();
 
@@ -46,10 +49,12 @@ class PomodoroCycleTest
         cycle = new PomodoroCycle(frame, zeroConfig);
 
         cycle.startWorkCycle();
+
+        assertSame(cycle.getCurCycle(), PomodoroCycle.CycleType.WORK);
     }
 
     @Test
-    void startResetStartCycleTest()
+    void startResetStartCycle()
     {
         cycle.startWorkCycle();
         cycle.resetTimer();
@@ -57,10 +62,17 @@ class PomodoroCycleTest
 
         assertFalse(cycle.timerReset);
         assertFalse(cycle.timerPaused);
+        assertSame(cycle.getCurCycle(), PomodoroCycle.CycleType.WORK);
     }
 
     @Test
-    void startPauseTest()
+    void pressStartInBreakCycle()
+    {
+
+    }
+
+    @Test
+    void startPause()
     {
         cycle.startWorkCycle();
         cycle.pauseTimer();

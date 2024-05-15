@@ -1,6 +1,7 @@
-package Pomodore;
+package main.Pomodore;
 
 import javax.imageio.ImageIO;
+import javax.management.monitor.Monitor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,6 +11,22 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+class MonitorConfig
+{
+    public int x;
+    public int y;
+    public int width;
+    public int height;
+
+    public MonitorConfig(int x, int y, int width, int height)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+};
 
 public class Pomodore extends JFrame
 {
@@ -46,7 +63,10 @@ public class Pomodore extends JFrame
         return numPomodoroCycleDisplay;
     }
 
-    public JProgressBar getTimerBar() { return timerBar; }
+    public JProgressBar getTimerBar()
+    {
+        return timerBar;
+    }
 
     private JTextField TimerStatusText;
     private JFormattedTextField breakTimeInput;
@@ -64,11 +84,12 @@ public class Pomodore extends JFrame
     private JTextField numPomodoroCycleDisplay;
     private JTextField presetInfoText;
 
-    private static Pomodore pomodoro;
+    private static Pomodore pomodore;
     private static PomodoroManager manager;
     private PomodoroConfig config;
     private PomodoroConfig toSaveConfig;
     private static XMLParser configParser;
+    private MonitorConfig monitorConfig;
 
     private boolean savePreset = false;
 
@@ -290,6 +311,9 @@ public class Pomodore extends JFrame
                 toSave.numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
 
                 configParser.writeTextFields(toSave);
+
+                // Save current window Position, Width and monitorID
+                saveWindowPosition();
             }
         });
     }
@@ -313,36 +337,36 @@ public class Pomodore extends JFrame
 
     private void setTextFields(PomodoroConfig newConfig)
     {
-        pomodoro.workTimeInput.setText(String.format("%s", (long) newConfig.workTime));
-        pomodoro.breakTimeInput.setText(String.format("%s", (long) newConfig.breakTime));
-        pomodoro.longBreakTimeInput.setText(String.format("%s", (long) newConfig.breakTimePomodoro));
-        pomodoro.numCyclesInput.setText(Integer.toString(newConfig.numCycles));
-        pomodoro.numCyclesPomodoroInput.setText(Integer.toString(newConfig.numPomodoroCycles));
+        pomodore.workTimeInput.setText(String.format("%s", (long) newConfig.workTime));
+        pomodore.breakTimeInput.setText(String.format("%s", (long) newConfig.breakTime));
+        pomodore.longBreakTimeInput.setText(String.format("%s", (long) newConfig.breakTimePomodoro));
+        pomodore.numCyclesInput.setText(Integer.toString(newConfig.numCycles));
+        pomodore.numCyclesPomodoroInput.setText(Integer.toString(newConfig.numPomodoroCycles));
     }
 
     private void setButtonTextField(int presetId, PomodoroConfig newConfig)
     {
-        String formattedText =  String.format("%s", (long) newConfig.workTime) + "/" +
+        String formattedText = String.format("%s", (long) newConfig.workTime) + "/" +
                 String.format("%s", (long) newConfig.breakTime) + "/" +
                 String.format("%s", (long) newConfig.breakTimePomodoro) + "/" +
                 String.format("%s", (long) newConfig.numCycles) + "/" +
                 String.format("%s", (long) newConfig.numPomodoroCycles);
 
-        if(presetId == 0)
+        if (presetId == 0)
             Preset1Button.setText(formattedText);
-        else if(presetId == 1)
+        else if (presetId == 1)
             Preset2Button.setText(formattedText);
-        else if(presetId == 2)
+        else if (presetId == 2)
             Preset3Button.setText(formattedText);
     }
 
     private static void setup()
     {
-        configParser = new XMLParser("./PomodoroPresets.xml", "./PomodoroSave.xml");
-        pomodoro = new Pomodore();
-        pomodoro.createAndShowGUI();
+        configParser = new XMLParser("./PomodoreConfig.xml");
+        pomodore = new Pomodore();
+        pomodore.createAndShowGUI();
         //pomodoro.setImages();
-        manager = new PomodoroManager(pomodoro.config, pomodoro);
+        manager = new PomodoroManager(pomodore.config, pomodore);
     }
 
     private void setImages()
@@ -350,12 +374,12 @@ public class Pomodore extends JFrame
         try
         {
             BufferedImage startButtonIcon = ImageIO.read(new File("Assets/start.png"));
-            pomodoro.Start.setIcon(new ImageIcon(startButtonIcon));
-            pomodoro.Start.setBorder(BorderFactory.createEmptyBorder());
-            pomodoro.Start.setContentAreaFilled(false);
-            pomodoro.Start.setOpaque(true);
-            pomodoro.Start.setPreferredSize(new Dimension(10, 10));
-            pomodoro.Start.setText("");
+            pomodore.Start.setIcon(new ImageIcon(startButtonIcon));
+            pomodore.Start.setBorder(BorderFactory.createEmptyBorder());
+            pomodore.Start.setContentAreaFilled(false);
+            pomodore.Start.setOpaque(true);
+            pomodore.Start.setPreferredSize(new Dimension(10, 10));
+            pomodore.Start.setText("");
         } catch (IOException e)
         {
             System.out.println("couldn't load image");
@@ -364,19 +388,48 @@ public class Pomodore extends JFrame
 
     private void createAndShowGUI()
     {
-        pomodoro.setTitle("Pomodoro Timer");
-        pomodoro.setSize(1600, 920);
-        pomodoro.setVisible(true);
-        pomodoro.setContentPane(pomodoro.main);
-        pomodoro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pomodoro.config = new PomodoroConfig(4, 25.0f, 5.0f, 2, 20.0f);
-        // Center window
-        pomodoro.setLocationRelativeTo(null);
+        pomodore.setTitle("Pomodoro Timer");
+        restoreWindowPosition();
+        pomodore.setVisible(true);
+        pomodore.setContentPane(pomodore.main);
+        pomodore.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pomodore.config = new PomodoroConfig(4, 25.0f, 5.0f, 2, 20.0f);
 
         timerBar.setForeground(Color.BLACK);
 
         setButtonTextFieldsOnStartup();
         setCustomTimerTextField();
+    }
+
+    private void saveWindowPosition()
+    {
+        Point windowPosition = pomodore.getLocation();
+
+        GraphicsConfiguration gc = pomodore.getGraphicsConfiguration();
+        GraphicsDevice[] monitors = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+
+        int x = windowPosition.x;
+        int y = windowPosition.y;
+        int width = pomodore.getWidth();
+        int height = pomodore.getHeight();
+
+        // Clamp so that everything is visible on startup
+        width = Math.min(2560, Math.max(width, 1100));
+        height = Math.min(1440, Math.max(height, 600));
+
+        configParser.writeMonitorInformation(new MonitorConfig(x, y, width, height));
+    }
+
+    private void restoreWindowPosition()
+    {
+        monitorConfig = configParser.readMonitorInformation();
+
+        pomodore.setSize(monitorConfig.width, monitorConfig.height);
+
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] monitors = ge.getScreenDevices();
+
+        pomodore.setLocation(monitorConfig.x, monitorConfig.y);
     }
 
     private void setButtonTextFieldsOnStartup()

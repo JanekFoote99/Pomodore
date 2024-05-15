@@ -1,4 +1,4 @@
-# Pomodore
+# main.Pomodore
 Pomodoro Timer written in Java Swing.
 
 Pomodoro is an effective way to manage your time while working/studying/learning in order to focus throughout the session.

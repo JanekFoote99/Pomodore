@@ -1,4 +1,4 @@
-package Pomodore;
+package main.Pomodore;
 
 public class PomodoroManager
 {

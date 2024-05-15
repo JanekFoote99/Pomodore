@@ -1,4 +1,4 @@
-package Pomodore;
+package main.Pomodore;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -31,7 +31,10 @@ public class PomodoroCycle
     // Flag to determine which Cycle the variable startTime represents
     private CycleType curCycle;
 
-    public CycleType getCurCycle () { return curCycle; }
+    public CycleType getCurCycle()
+    {
+        return curCycle;
+    }
 
     private long startTime = -1;
     private long timerTime = -1;
@@ -356,17 +359,24 @@ public class PomodoroCycle
 
     public void resetTimer()
     {
-        startTime = -1;
-        SimpleDateFormat df = new SimpleDateFormat("mm:ss");
-        timeDisplay.setText(df.format(MinutesToMilliseconds(workTime)));
         timer.stop();
 
+        // Reset Logic
+        startTime = -1;
         curNumCycles = 1;
         curNumCyclesPomodoro = 1;
-
-        frame.getContentPane().setBackground(Color.GRAY);
+        curCycle = CycleType.OVER;
         timerPaused = true;
         timerReset = true;
+
+        // Reset UI Elements
+        SimpleDateFormat df = new SimpleDateFormat("mm:ss");
+        timeDisplay.setText(df.format(MinutesToMilliseconds(workTime)));
+        numCyclesDisplay.setText(curNumCycles + " / " + numCycles);
+        numPomodoroCycleDisplay.setText(curNumCyclesPomodoro + " / " + numCyclesPomodoro);
+        timerBarDisplay.setValue(0);
+        frame.getContentPane().setBackground(Color.GRAY);
+        curCycleDisplay.setText(curCycle.toString());
     }
 
     // TODO: Clean up and fix Code
@@ -378,12 +388,11 @@ public class PomodoroCycle
         // are true, the timer rather restarts than continue
         if (timerReset)
         {
+            curCycle = CycleType.WORK;
             timerReset = false;
             timerPaused = false;
 
-            numCyclesDisplay.setText(curNumCycles + " / " + numCycles);
-            numPomodoroCycleDisplay.setText(curNumCyclesPomodoro + " / " + numCyclesPomodoro);
-            curCycleDisplay.setText(curCycle.toString());
+            setUIComponents();
 
             frame.getContentPane().setBackground(Color.decode(B_GREEN));
             timerTime = (long) workTime;
@@ -393,15 +402,18 @@ public class PomodoroCycle
             continueTimer();
         } else
         {
-            // TODO: create abstraction
-            numCyclesDisplay.setText(curNumCycles + " / " + numCycles);
-            numPomodoroCycleDisplay.setText(curNumCyclesPomodoro + " / " + numCyclesPomodoro);
-            curCycleDisplay.setText(curCycle.toString());
-            //---------------------------------------------------------
+            curCycle = CycleType.WORK;
+            setUIComponents();
             timerTime = (long) workTime;
             timer.start();
-            frame.getContentPane().setBackground(Color.decode(B_GREEN));
         }
+    }
+
+    private void setUIComponents()
+    {
+        numCyclesDisplay.setText(curNumCycles + " / " + numCycles);
+        numPomodoroCycleDisplay.setText(curNumCyclesPomodoro + " / " + numCyclesPomodoro);
+        curCycleDisplay.setText(curCycle.toString());
     }
 
     public void SetConfig(PomodoroConfig config)
