@@ -1,7 +1,6 @@
 package main.Pomodore;
 
 import javax.imageio.ImageIO;
-import javax.management.monitor.Monitor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -83,6 +82,8 @@ public class Pomodore extends JFrame
     private JButton setAsPresetButton;
     private JTextField numPomodoroCycleDisplay;
     private JTextField presetInfoText;
+    private JTextField todoText;
+    private JPanel TODOListPanel;
 
     private static Pomodore pomodore;
     private static PomodoroManager manager;
@@ -364,6 +365,10 @@ public class Pomodore extends JFrame
     {
         configParser = new XMLParser("./PomodoreConfig.xml");
         pomodore = new Pomodore();
+
+        TODOList todoList = new TODOList();
+        pomodore.add(todoList, BorderLayout.WEST);
+
         pomodore.createAndShowGUI();
         //pomodoro.setImages();
         manager = new PomodoroManager(pomodore.config, pomodore);
