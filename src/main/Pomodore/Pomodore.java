@@ -1,5 +1,7 @@
 package main.Pomodore;
 
+import main.Pomodore.TODOList.TODOList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -366,8 +368,7 @@ public class Pomodore extends JFrame
         configParser = new XMLParser("./PomodoreConfig.xml");
         pomodore = new Pomodore();
 
-        TODOList todoList = new TODOList();
-        pomodore.add(todoList, BorderLayout.WEST);
+        TODOList todoList = new TODOList(pomodore.TODOListPanel);
 
         pomodore.createAndShowGUI();
         //pomodoro.setImages();
@@ -394,9 +395,10 @@ public class Pomodore extends JFrame
     private void createAndShowGUI()
     {
         pomodore.setTitle("Pomodoro Timer");
-        restoreWindowPosition();
+        pomodore.restoreWindowPosition();
         pomodore.setVisible(true);
         pomodore.setContentPane(pomodore.main);
+        pomodore.getContentPane().setBackground(Color.GRAY);
         pomodore.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pomodore.config = new PomodoroConfig(4, 25.0f, 5.0f, 2, 20.0f);
 
