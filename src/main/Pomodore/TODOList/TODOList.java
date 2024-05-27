@@ -1,34 +1,45 @@
 package main.Pomodore.TODOList;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class TODOList
 {
-    private DefaultListModel<TODOItem> listModel;
-    private JList<TODOItem> todoJList;
+    private DefaultTableModel tableModel;
+    private JTable todoTable;
 
     public TODOList(JPanel panel)
     {
-        this.listModel = new DefaultListModel<>();
-        this.todoJList = new JList<>(this.listModel);
-        this.todoJList.setCellRenderer(new TODORenderer());
-
-        this.todoJList.addMouseListener(new MouseAdapter() {
+        tableModel = new DefaultTableModel(new Object[]{"Tasks", "Checkbox"}, 0);
+        todoTable = new JTable(tableModel) {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                int index = todoJList.locationToIndex(e.getPoint());
-                if (index != -1) {
-                    TODOItem item = listModel.getElementAt(index);
-                    item.setStatus(!item.getStatus());
-                    todoJList.repaint(todoJList.getCellBounds(index, index));
+            public Class<?> getColumnClass(int column) {
+                if (column == 1) {
+                    return Boolean.class;
                 }
+                return String.class;
             }
-        });
 
-        JScrollPane scrollPane = new JScrollPane(todoJList);
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return true;
+            }
+        };
+
+        todoTable.getColumnModel().getColumn(0).setCellRenderer(new TODORenderer());
+        todoTable.getColumnModel().getColumn(1).setCellRenderer(new TODORenderer());
+        todoTable.getColumnModel().getColumn(0).setCellEditor(new TODOEditor());
+        todoTable.getColumnModel().getColumn(1).setCellEditor(new TODOEditor());
+
+        // Set fixed Width of checkbox disregarding of Window size (more space for the Item Text)
+        /*int checkboxWidth = 50;
+        todoTable.getColumnModel().getColumn(1).setPreferredWidth(checkboxWidth);
+        todoTable.getColumnModel().getColumn(1).setMaxWidth(checkboxWidth);*/
+
+        JScrollPane scrollPane = new JScrollPane(todoTable);
         panel.setLayout(new BorderLayout());
         panel.add(scrollPane, BorderLayout.CENTER);
 
@@ -37,8 +48,7 @@ public class TODOList
         addItem("Task 3");
     }
 
-    public void addItem(String text)
-    {
-        listModel.addElement(new TODOItem(text));
+    public void addItem(String text) {
+        tableModel.addRow(new Object[]{new TODOItem(text)});
     }
 }

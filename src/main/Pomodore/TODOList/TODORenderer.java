@@ -1,39 +1,44 @@
 package main.Pomodore.TODOList;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
-class TODORenderer extends JPanel implements ListCellRenderer<TODOItem>
+class TODORenderer extends DefaultTableCellRenderer
 {
-    private JLabel label;
+    private JTextField textField;
     private JCheckBox checkBox;
 
     public TODORenderer()
     {
         setLayout(new BorderLayout());
-        label = new JLabel();
-        checkBox =  new JCheckBox();
-        add(label, BorderLayout.CENTER);
+        textField = new JTextField();
+        checkBox = new JCheckBox();
+        add(textField, BorderLayout.CENTER);
         add(checkBox, BorderLayout.EAST);
     }
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends TODOItem> list, TODOItem value, int index, boolean isSelected, boolean cellHasFocus)
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        if (value instanceof TODOItem) {
+            TODOItem item = (TODOItem) value;
+            if (column == 0) {
+                return item.getTextField();
+            } else if (column == 1) {
+                item.setCheckbox(isSelected);
+                return item.getCheckBox();
+            }
+        }
+        return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    }
+
+    public JTextField getTextField()
     {
-        label.setText(value.getText());
-        checkBox.setSelected(value.getStatus());
+        return textField;
+    }
 
-        if (isSelected)
-        {
-            setBackground(list.getSelectionBackground());
-            setForeground(list.getSelectionForeground());
-        }
-        else
-        {
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
-        }
-
-        return this;
+    public JCheckBox getCheckBox()
+    {
+        return checkBox;
     }
 }

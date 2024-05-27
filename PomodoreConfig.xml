@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><data>
     <timer>
-        <worktime>25</worktime>
+        <worktime>55</worktime>
         <breaktime>5</breaktime>
         <longbreaktime>20</longbreaktime>
-        <numCycles>4</numCycles>
-        <numPomodoroCycles>2</numPomodoroCycles>
+        <numCycles>2</numCycles>
+        <numPomodoroCycles>1</numPomodoroCycles>
     </timer>
 	<presets>
 		<preset id="0">
@@ -32,7 +32,7 @@
 	<window>
         <width>1100</width>
         <height>600</height>
-		<xPos>626</xPos>
-		<yPos>369</yPos>
+		<xPos>524</xPos>
+		<yPos>308</yPos>
 	</window>
 </data>

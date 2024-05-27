@@ -319,6 +319,8 @@ public class Pomodore extends JFrame
                 saveWindowPosition();
             }
         });
+
+
     }
 
     private void savePreset(int presetId)

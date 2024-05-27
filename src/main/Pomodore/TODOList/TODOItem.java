@@ -1,29 +1,38 @@
 package main.Pomodore.TODOList;
 
+import javax.swing.*;
+
 public class TODOItem
 {
-    private String text;
-    // Status of the Task (is the Task done or not?)
-    private boolean status;
+    private JTextField text;
+    // Checkmark weather item is finished or not
+    private JCheckBox checkbox;
 
-    public TODOItem(String text)
+    TODOItem(String text)
     {
-        this.text = text;
-        this.status = false;
+        this.text = new JTextField(text);
+        this.checkbox = new JCheckBox();
     }
 
-    public String getText()
+    // Getters
+    public JCheckBox getCheckBox()
+    {
+        return this.checkbox;
+    }
+
+    public JTextField getTextField()
     {
         return this.text;
     }
 
-    public boolean getStatus()
+    // Setters
+    public void setCheckbox(boolean checkbox)
     {
-        return this.status;
+        this.checkbox.setSelected(checkbox);
     }
 
-    public void setStatus(boolean status)
+    public void setText(String text)
     {
-        this.status = status;
+        this.text.setText(text);
     }
 }
