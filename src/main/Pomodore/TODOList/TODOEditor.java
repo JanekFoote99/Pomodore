@@ -18,13 +18,12 @@ class TODOEditor extends AbstractCellEditor implements TableCellEditor
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         if (value instanceof TODOItem) {
             currentItem = (TODOItem) value;
-            currentColumn = column;
             if (column == 0) {
-                currentItem.getTextField().requestFocus();
                 return currentItem.getTextField();
             } else if (column == 1) {
-                currentItem.getCheckBox().requestFocus();
                 return currentItem.getCheckBox();
+            } else if(column == 2){
+                return currentItem.getDeleteButton();
             }
         }
         return null;
