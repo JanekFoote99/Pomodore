@@ -3,10 +3,7 @@ package main.Pomodore.TODOList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public class TODOList
 {
@@ -24,8 +21,8 @@ public class TODOList
                 if (column == 1)
                 {
                     return Boolean.class;
-                }
-                else if(column == 2){
+                } else if (column == 2)
+                {
                     return JButton.class;
                 }
                 return String.class;
@@ -88,16 +85,49 @@ public class TODOList
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                int index = tableModel.getRowCount() - 1;
-                deleteItem(index);
+                deleteItem(item);
+            }
+        });
+
+        item.getCheckBox().addItemListener(new ItemListener()
+        {
+            @Override
+            public void itemStateChanged(ItemEvent e)
+            {
+                if (item.getCheckBox().isSelected()) {
+                    item.getTextField().setBackground(Color.GREEN);
+                } else {
+                    item.getTextField().setBackground(Color.WHITE);
+                }
+                // update JTable. Else the Color change is delayed upon the next Click
+                todoTable.repaint();
             }
         });
 
         tableModel.addRow(new Object[]{item, item, item});
     }
 
-    public void deleteItem(int index)
+    // Problem: if two Entries have the same name, the first one detected in the Loop will be deleted
+    // This is considered a bug within a very niche area as it is impractical to have the same
+    // Entry twice in a Todolist
+    public void deleteItem(TODOItem item)
     {
-        tableModel.removeRow(index);
+        String text = item.getTextField().getText();
+        for (int i = tableModel.getRowCount() - 1; i >= 0; i--)
+        {
+            String textFieldString = ((TODOItem)todoTable.getValueAt(i, 0)).getTextField().getText();
+            if (textFieldString.equals(text)) {
+                // Without the underlying if Statement, the JTable stays in editing Mode.
+                // As long as the JTable is in editing Mode, the Values in it won't get updated.
+                // That results in an IndexOutOfBoundsException, when trying to delete
+                // two elements consecutively on the same Row.
+                // e.g. you delete Task 2 in Row 2. Task 3 moves from Row 3 to Row 2, making it unable to be deleted
+                if (todoTable.isEditing() && todoTable.getEditingRow() == i) {
+                    todoTable.getCellEditor().stopCellEditing();
+                }
+                tableModel.removeRow(i);
+                break;
+            }
+        }
     }
 }

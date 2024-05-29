@@ -4,25 +4,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class TODOItem
 {
-    private JTextField text;
+    static int instanceCount = 0;
+
+    private JTextField textField;
     // Checkmark weather item is finished or not
-    private JCheckBox checkbox;
-    private JButton deleteButton;
+    private final JCheckBox checkbox;
+    private final JButton deleteButton;
+    private final int id;
 
     TODOItem(String text)
     {
-        this.text = new JTextField(text);
+        instanceCount++;
+
+        this.textField = new JTextField(text);
         this.checkbox = new JCheckBox();
         this.checkbox.setHorizontalAlignment(JCheckBox.CENTER);
         this.deleteButton = new JButton("X");
         this.deleteButton.setBackground(Color.decode("#a52a2a"));
         this.deleteButton.setForeground(Color.WHITE);
+        this.id = instanceCount;
 
-        Font textFont = new Font(this.text.getFont().getName(), this.text.getFont().getStyle(), 20);
-        this.text.setFont(textFont);
+        Font textFont = new Font(this.textField.getFont().getName(), this.textField.getFont().getStyle(), 20);
+        this.textField.setFont(textFont);
     }
 
     // Getters
@@ -33,12 +41,17 @@ public class TODOItem
 
     public JTextField getTextField()
     {
-        return this.text;
+        return this.textField;
     }
 
     public JButton getDeleteButton()
     {
         return this.deleteButton;
+    }
+
+    public int getId()
+    {
+        return this.id;
     }
 
     // Setters
@@ -47,8 +60,8 @@ public class TODOItem
         this.checkbox.setSelected(checkbox);
     }
 
-    public void setText(String text)
+    public void setTextField(String textField)
     {
-        this.text.setText(text);
+        this.textField.setText(textField);
     }
 }
