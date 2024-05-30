@@ -9,17 +9,14 @@ import java.awt.event.ItemListener;
 
 public class TODOItem
 {
-    static int instanceCount = 0;
-
     private JTextField textField;
     // Checkmark weather item is finished or not
     private final JCheckBox checkbox;
     private final JButton deleteButton;
-    private final int id;
 
-    TODOItem(String text)
+
+    public TODOItem(String text)
     {
-        instanceCount++;
 
         this.textField = new JTextField(text);
         this.checkbox = new JCheckBox();
@@ -27,7 +24,6 @@ public class TODOItem
         this.deleteButton = new JButton("X");
         this.deleteButton.setBackground(Color.decode("#a52a2a"));
         this.deleteButton.setForeground(Color.WHITE);
-        this.id = instanceCount;
 
         Font textFont = new Font(this.textField.getFont().getName(), this.textField.getFont().getStyle(), 20);
         this.textField.setFont(textFont);
@@ -47,11 +43,6 @@ public class TODOItem
     public JButton getDeleteButton()
     {
         return this.deleteButton;
-    }
-
-    public int getId()
-    {
-        return this.id;
     }
 
     // Setters

@@ -1,5 +1,6 @@
 package main.Pomodore;
 
+import main.Pomodore.TODOList.TODOItem;
 import main.Pomodore.TODOList.TODOList;
 
 import javax.imageio.ImageIO;
@@ -12,6 +13,9 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 class MonitorConfig
 {
@@ -93,6 +97,7 @@ public class Pomodore extends JFrame
     private PomodoroConfig toSaveConfig;
     private static XMLParser configParser;
     private MonitorConfig monitorConfig;
+    private static TODOList todoList;
 
     private boolean savePreset = false;
 
@@ -305,18 +310,44 @@ public class Pomodore extends JFrame
             @Override
             public void windowClosing(WindowEvent e)
             {
-                PomodoroConfig toSave = new PomodoroConfig();
+                // Save Timer config
+                {
+                    PomodoroConfig toSave = new PomodoroConfig();
 
-                toSave.workTime = Integer.parseInt(workTimeInput.getText().trim());
-                toSave.breakTime = Integer.parseInt(breakTimeInput.getText().trim());
-                toSave.breakTimePomodoro = Integer.parseInt(longBreakTimeInput.getText().trim());
-                toSave.numCycles = Integer.parseInt(numCyclesInput.getText().trim());
-                toSave.numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
+                    toSave.workTime = Integer.parseInt(workTimeInput.getText().trim());
+                    toSave.breakTime = Integer.parseInt(breakTimeInput.getText().trim());
+                    toSave.breakTimePomodoro = Integer.parseInt(longBreakTimeInput.getText().trim());
+                    toSave.numCycles = Integer.parseInt(numCyclesInput.getText().trim());
+                    toSave.numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
 
-                configParser.writeTextFields(toSave);
+                    configParser.writeTextFields(toSave);
+                }
+
+                // Save TODOList Elements
+                {
+                    ArrayList<TODOItem> items = todoList.getTodos();
+
+                    configParser.writeTodos(items);
+                }
 
                 // Save current window Position, Width and monitorID
-                saveWindowPosition();
+                {
+                    Point windowPosition = pomodore.getLocation();
+
+                    GraphicsConfiguration gc = pomodore.getGraphicsConfiguration();
+                    GraphicsDevice[] monitors = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+
+                    int x = windowPosition.x;
+                    int y = windowPosition.y;
+                    int width = pomodore.getWidth();
+                    int height = pomodore.getHeight();
+
+                    // Clamp so that everything is visible on startup
+                    width = Math.min(2560, Math.max(width, 1100));
+                    height = Math.min(1440, Math.max(height, 600));
+
+                    configParser.writeMonitorInformation(new MonitorConfig(x, y, width, height));
+                }
             }
         });
 
@@ -370,7 +401,9 @@ public class Pomodore extends JFrame
         configParser = new XMLParser("./PomodoreConfig.xml");
         pomodore = new Pomodore();
 
-        TODOList todoList = new TODOList(pomodore.TODOListPanel);
+        ArrayList<TODOItem> todoItemList = configParser.readTodos();
+
+        todoList = new TODOList(pomodore.TODOListPanel, todoItemList);
 
         pomodore.createAndShowGUI();
         //pomodoro.setImages();
@@ -408,25 +441,6 @@ public class Pomodore extends JFrame
 
         setButtonTextFieldsOnStartup();
         setCustomTimerTextField();
-    }
-
-    private void saveWindowPosition()
-    {
-        Point windowPosition = pomodore.getLocation();
-
-        GraphicsConfiguration gc = pomodore.getGraphicsConfiguration();
-        GraphicsDevice[] monitors = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-
-        int x = windowPosition.x;
-        int y = windowPosition.y;
-        int width = pomodore.getWidth();
-        int height = pomodore.getHeight();
-
-        // Clamp so that everything is visible on startup
-        width = Math.min(2560, Math.max(width, 1100));
-        height = Math.min(1440, Math.max(height, 600));
-
-        configParser.writeMonitorInformation(new MonitorConfig(x, y, width, height));
     }
 
     private void restoreWindowPosition()

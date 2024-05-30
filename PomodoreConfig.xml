@@ -35,4 +35,5 @@
 		<xPos>672</xPos>
 		<yPos>252</yPos>
 	</window>
+    <todos><todoItem>Task 1</todoItem><todoItem>Task 2</todoItem><todoItem>Task 3</todoItem></todos>
 </data>

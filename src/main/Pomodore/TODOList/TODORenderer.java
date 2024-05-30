@@ -9,9 +9,8 @@ class TODORenderer extends DefaultTableCellRenderer
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
     {
-        if (value instanceof TODOItem)
+        if (value instanceof TODOItem item)
         {
-            TODOItem item = (TODOItem) value;
             if (column == 0)
             {
                 return item.getTextField();

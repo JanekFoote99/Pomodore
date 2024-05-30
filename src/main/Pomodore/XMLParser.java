@@ -1,22 +1,27 @@
 package main.Pomodore;
 
+import main.Pomodore.TODOList.TODOItem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.MonitorInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 public class XMLParser
 {
@@ -74,12 +79,8 @@ public class XMLParser
             preset.getElementsByTagName("numCycles").item(0).setTextContent(Integer.toString(config.numCycles));
             preset.getElementsByTagName("numPomodoroCycles").item(0).setTextContent(Integer.toString(config.numPomodoroCycles));
 
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(configFilepath);
-            transformer.transform(source, result);
-        } catch (ParserConfigurationException | IOException | SAXException | TransformerException e)
+            transform(doc);
+        } catch (ParserConfigurationException | IOException | SAXException e)
         {
             throw new RuntimeException(e);
         }
@@ -156,12 +157,8 @@ public class XMLParser
             windowConfig.getElementsByTagName("width").item(0).setTextContent(Integer.toString(config.width));
             windowConfig.getElementsByTagName("height").item(0).setTextContent(Integer.toString(config.height));
 
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(configFilepath);
-            transformer.transform(source, result);
-        } catch (ParserConfigurationException | IOException | SAXException | TransformerException e)
+            transform(doc);
+        } catch (ParserConfigurationException | IOException | SAXException e)
         {
             throw new RuntimeException(e);
         }
@@ -185,6 +182,93 @@ public class XMLParser
 
             return new MonitorConfig(x, y, width, height);
         } catch (ParserConfigurationException | SAXException | IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Writes all the TODOItems that are not finished/ticked
+    public void writeTodos(ArrayList<TODOItem> todoList)
+    {
+        try
+        {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            Document doc = db.parse(configFilepath);
+
+            Element todos = (Element) doc.getElementsByTagName("todos").item(0);
+
+            // wipe last saved data
+            while (todos.hasChildNodes())
+            {
+                todos.removeChild(todos.getFirstChild());
+            }
+
+            for (TODOItem todoItem : todoList)
+            {
+                if (!todoItem.getCheckBox().isSelected())
+                {
+                    Element todo = doc.createElement("todoItem");
+                    todo.setTextContent(todoItem.getTextField().getText());
+                    todos.appendChild(todo);
+                }
+            }
+
+            // TODO: Setup Formatting for todos section
+            transform(doc);
+        } catch (ParserConfigurationException | IOException | SAXException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ArrayList<TODOItem> readTodos()
+    {
+        try
+        {
+            ArrayList<TODOItem> items = new ArrayList<>();
+
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            Document doc = db.parse(configFilepath);
+
+            Element todos = (Element) doc.getElementsByTagName("todos").item(0);
+
+            NodeList nl = todos.getElementsByTagName("todoItem");
+
+            for (int i = 0; i < nl.getLength(); i++)
+            {
+                Element item = (Element) nl.item(i);
+
+                String todoText = item.getTextContent().trim();
+                TODOItem curItem = new TODOItem(todoText);
+
+                items.add(curItem);
+            }
+
+            return items;
+        } catch (ParserConfigurationException | SAXException | IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    void transform(Document doc)
+    {
+        try
+        {
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            // Creates Whitespaces between XML Nodes
+            /*transformer.setOutputProperty(OutputPropertiesFactory.S_KEY_INDENT_AMOUNT, "4");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");*/
+
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(configFilepath);
+            transformer.transform(source, result);
+        } catch (TransformerException e)
         {
             throw new RuntimeException(e);
         }
