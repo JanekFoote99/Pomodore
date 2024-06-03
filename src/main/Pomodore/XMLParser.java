@@ -54,9 +54,18 @@ public class XMLParser
             config.numPomodoroCycles = Integer.parseInt(preset.getElementsByTagName("numPomodoroCycles").item(0).getTextContent().trim());
 
             return config;
-        } catch (ParserConfigurationException | SAXException | IOException e)
+        } catch (IOException e)
         {
-            throw new RuntimeException(e);
+            System.out.println("Error while loading Configuration File. Loading standard Preset!");
+            return new PomodoroConfig(4, 25, 5, 1, 20);
+        } catch (ParserConfigurationException e)
+        {
+            System.out.println("Error while configuring the XML-Parser. Loading standard Preset!");
+            return new PomodoroConfig(4, 25, 5, 1, 20);
+        } catch (SAXException e)
+        {
+            System.out.println("SAX Parser Error. Loading standard Preset!");
+            return new PomodoroConfig(4, 25, 5, 1, 20);
         }
     }
 
@@ -80,9 +89,15 @@ public class XMLParser
             preset.getElementsByTagName("numPomodoroCycles").item(0).setTextContent(Integer.toString(config.numPomodoroCycles));
 
             transform(doc);
-        } catch (ParserConfigurationException | IOException | SAXException e)
+        } catch (ParserConfigurationException e)
         {
-            throw new RuntimeException(e);
+            System.out.println("Error while configuring the XML-Parser. Couldn't write Preset!");
+        } catch (SAXException e)
+        {
+            System.out.println("SAX Parser Error. Couldn't write Preset!");
+        } catch (IOException e)
+        {
+            System.out.println("Error while loading Configuration File. Couldn't write Preset!");
         }
     }
 
@@ -107,9 +122,18 @@ public class XMLParser
             config.numPomodoroCycles = Integer.parseInt(timerVariables.getElementsByTagName("numPomodoroCycles").item(0).getTextContent().trim());
 
             return config;
-        } catch (ParserConfigurationException | SAXException | IOException e)
+        } catch (IOException e)
         {
-            throw new RuntimeException(e);
+            System.out.println("Error while loading Configuration File. Loading standard Timer Variables!");
+            return new PomodoroConfig(4, 25, 5, 1, 20);
+        } catch (ParserConfigurationException e)
+        {
+            System.out.println("Error while configuring the XML-Parser. Loading standard Timer Variables!");
+            return new PomodoroConfig(4, 25, 5, 1, 20);
+        } catch (SAXException e)
+        {
+            System.out.println("SAX Parser Error. Loading standard Timer Variables!");
+            return new PomodoroConfig(4, 25, 5, 1, 20);
         }
     }
 
@@ -130,37 +154,16 @@ public class XMLParser
             timerVariables.getElementsByTagName("numCycles").item(0).setTextContent(Integer.toString(config.numCycles));
             timerVariables.getElementsByTagName("numPomodoroCycles").item(0).setTextContent(Integer.toString(config.numPomodoroCycles));
 
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(configFilepath);
-            transformer.transform(source, result);
-        } catch (ParserConfigurationException | IOException | SAXException | TransformerException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void writeMonitorInformation(MonitorConfig config)
-    {
-        try
-        {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-
-            Document doc = db.parse(configFilepath);
-
-            Element windowConfig = (Element) doc.getElementsByTagName("window").item(0);
-
-            windowConfig.getElementsByTagName("xPos").item(0).setTextContent(Integer.toString(config.x));
-            windowConfig.getElementsByTagName("yPos").item(0).setTextContent(Integer.toString(config.y));
-            windowConfig.getElementsByTagName("width").item(0).setTextContent(Integer.toString(config.width));
-            windowConfig.getElementsByTagName("height").item(0).setTextContent(Integer.toString(config.height));
-
             transform(doc);
-        } catch (ParserConfigurationException | IOException | SAXException e)
+        } catch (ParserConfigurationException e)
         {
-            throw new RuntimeException(e);
+            System.out.println("Error while configuring the XML-Parser. Couldn't write Timer Variables!");
+        } catch (SAXException e)
+        {
+            System.out.println("SAX Parser Error. Couldn't write Timer Variables!");
+        } catch (IOException e)
+        {
+            System.out.println("Error while loading Configuration File. Couldn't write Timer Variables!");
         }
     }
 
@@ -181,13 +184,92 @@ public class XMLParser
             int height = Integer.parseInt(windowVariables.getElementsByTagName("height").item(0).getTextContent().trim());
 
             return new MonitorConfig(x, y, width, height);
-        } catch (ParserConfigurationException | SAXException | IOException e)
+        } catch (IOException e)
         {
-            throw new RuntimeException(e);
+            System.out.println("Error while loading Configuration File. Loading standard Window Position!");
+            return new MonitorConfig(0, 0, 1600, 1200);
+        } catch (ParserConfigurationException e)
+        {
+            System.out.println("Error while configuring the XML-Parser. Loading standard Window Position!");
+            return new MonitorConfig(0, 0, 1600, 1200);
+        } catch (SAXException e)
+        {
+            System.out.println("SAX Parser Error. Loading standard Window Position!");
+            return new MonitorConfig(0, 0, 1600, 1200);
+        }
+    }
+
+    public void writeMonitorInformation(MonitorConfig config)
+    {
+        try
+        {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            Document doc = db.parse(configFilepath);
+
+            Element windowConfig = (Element) doc.getElementsByTagName("window").item(0);
+
+            windowConfig.getElementsByTagName("xPos").item(0).setTextContent(Integer.toString(config.x));
+            windowConfig.getElementsByTagName("yPos").item(0).setTextContent(Integer.toString(config.y));
+            windowConfig.getElementsByTagName("width").item(0).setTextContent(Integer.toString(config.width));
+            windowConfig.getElementsByTagName("height").item(0).setTextContent(Integer.toString(config.height));
+
+            transform(doc);
+        } catch (ParserConfigurationException e)
+        {
+            System.out.println("Error while configuring the XML-Parser. Couldn't write Monitor Information!");
+        } catch (SAXException e)
+        {
+            System.out.println("SAX Parser Error. Couldn't write Monitor Information!");
+        } catch (IOException e)
+        {
+            System.out.println("Error while loading Configuration File. Couldn't write Monitor Information!");
         }
     }
 
     // Writes all the TODOItems that are not finished/ticked
+    public ArrayList<TODOItem> readTodos()
+    {
+        try
+        {
+            ArrayList<TODOItem> items = new ArrayList<>();
+
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            Document doc = db.parse(configFilepath);
+
+            Element todos = (Element) doc.getElementsByTagName("todos").item(0);
+
+            NodeList nl = todos.getElementsByTagName("todoItem");
+
+            for (int i = 0; i < nl.getLength(); i++)
+            {
+                Element item = (Element) nl.item(i);
+
+                String todoText = item.getTextContent().trim();
+                TODOItem curItem = new TODOItem(todoText);
+
+                items.add(curItem);
+            }
+
+            return items;
+        } catch (IOException e)
+        {
+            System.out.println("Error while loading Configuration File. Window position couldn't be retrieved");
+            return new ArrayList<TODOItem>();
+        } catch (ParserConfigurationException e)
+        {
+            System.out.println("Error while configuring the XML-Parser");
+            return new ArrayList<TODOItem>();
+        } catch (SAXException e)
+        {
+            System.out.println("SAX Parser Error");
+            return new ArrayList<TODOItem>();
+        }
+    }
+
     public void writeTodos(ArrayList<TODOItem> todoList)
     {
         try
@@ -217,41 +299,15 @@ public class XMLParser
 
             // TODO: Setup Formatting for todos section
             transform(doc);
-        } catch (ParserConfigurationException | IOException | SAXException e)
+        } catch (ParserConfigurationException e)
         {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public ArrayList<TODOItem> readTodos()
-    {
-        try
+            System.out.println("Error while configuring the XML-Parser. Couldn't write Todos!");
+        } catch (SAXException e)
         {
-            ArrayList<TODOItem> items = new ArrayList<>();
-
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-
-            Document doc = db.parse(configFilepath);
-
-            Element todos = (Element) doc.getElementsByTagName("todos").item(0);
-
-            NodeList nl = todos.getElementsByTagName("todoItem");
-
-            for (int i = 0; i < nl.getLength(); i++)
-            {
-                Element item = (Element) nl.item(i);
-
-                String todoText = item.getTextContent().trim();
-                TODOItem curItem = new TODOItem(todoText);
-
-                items.add(curItem);
-            }
-
-            return items;
-        } catch (ParserConfigurationException | SAXException | IOException e)
+            System.out.println("SAX Parser Error. Couldn't write Todos!");
+        } catch (IOException e)
         {
-            throw new RuntimeException(e);
+            System.out.println("Error while loading Configuration File. Couldn't write Todos!");
         }
     }
 

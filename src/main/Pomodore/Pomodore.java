@@ -5,17 +5,13 @@ import main.Pomodore.TODOList.TODOList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.html.Option;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 class MonitorConfig
 {
@@ -90,6 +86,7 @@ public class Pomodore extends JFrame
     private JTextField presetInfoText;
     private JTextField todoText;
     private JPanel TODOListPanel;
+    private JButton OptionsTest;
 
     private static Pomodore pomodore;
     private static PomodoroManager manager;
@@ -310,48 +307,46 @@ public class Pomodore extends JFrame
             @Override
             public void windowClosing(WindowEvent e)
             {
-                // Save Timer config
-                {
-                    PomodoroConfig toSave = new PomodoroConfig();
+            // Save Timer config
+            {
+                PomodoroConfig toSave = new PomodoroConfig();
 
-                    toSave.workTime = Integer.parseInt(workTimeInput.getText().trim());
-                    toSave.breakTime = Integer.parseInt(breakTimeInput.getText().trim());
-                    toSave.breakTimePomodoro = Integer.parseInt(longBreakTimeInput.getText().trim());
-                    toSave.numCycles = Integer.parseInt(numCyclesInput.getText().trim());
-                    toSave.numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
+                toSave.workTime = Integer.parseInt(workTimeInput.getText().trim());
+                toSave.breakTime = Integer.parseInt(breakTimeInput.getText().trim());
+                toSave.breakTimePomodoro = Integer.parseInt(longBreakTimeInput.getText().trim());
+                toSave.numCycles = Integer.parseInt(numCyclesInput.getText().trim());
+                toSave.numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
 
-                    configParser.writeTextFields(toSave);
-                }
+                configParser.writeTextFields(toSave);
+            }
 
-                // Save TODOList Elements
-                {
-                    ArrayList<TODOItem> items = todoList.getTodos();
+            // Save TODOList Elements
+            {
+                ArrayList<TODOItem> items = todoList.getTodos();
 
-                    configParser.writeTodos(items);
-                }
+                configParser.writeTodos(items);
+            }
 
-                // Save current window Position, Width and monitorID
-                {
-                    Point windowPosition = pomodore.getLocation();
+            // Save current window Position, Width and monitorID
+            {
+                Point windowPosition = pomodore.getLocation();
 
-                    GraphicsConfiguration gc = pomodore.getGraphicsConfiguration();
-                    GraphicsDevice[] monitors = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+                GraphicsConfiguration gc = pomodore.getGraphicsConfiguration();
+                GraphicsDevice[] monitors = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 
-                    int x = windowPosition.x;
-                    int y = windowPosition.y;
-                    int width = pomodore.getWidth();
-                    int height = pomodore.getHeight();
+                int x = windowPosition.x;
+                int y = windowPosition.y;
+                int width = pomodore.getWidth();
+                int height = pomodore.getHeight();
 
-                    // Clamp so that everything is visible on startup
-                    width = Math.min(2560, Math.max(width, 1100));
-                    height = Math.min(1440, Math.max(height, 600));
+                // Clamp so that everything is visible on startup
+                width = Math.min(2560, Math.max(width, 1100));
+                height = Math.min(1440, Math.max(height, 600));
 
-                    configParser.writeMonitorInformation(new MonitorConfig(x, y, width, height));
-                }
+                configParser.writeMonitorInformation(new MonitorConfig(x, y, width, height));
+            }
             }
         });
-
-
     }
 
     private void savePreset(int presetId)
