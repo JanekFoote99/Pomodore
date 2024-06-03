@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><data>
     <timer>
-        <worktime>55</worktime>
+        <worktime>25</worktime>
         <breaktime>5</breaktime>
         <longbreaktime>20</longbreaktime>
-        <numCycles>2</numCycles>
-        <numPomodoroCycles>1</numPomodoroCycles>
+        <numCycles>4</numCycles>
+        <numPomodoroCycles>2</numPomodoroCycles>
     </timer>
 	<presets>
 		<preset id="0">
@@ -24,9 +24,9 @@
 		<preset id="2">
 			<worktime>55</worktime>
 			<breaktime>5</breaktime>
-			<longbreaktime>20</longbreaktime>
+			<longbreaktime>30</longbreaktime>
 			<numCycles>2</numCycles>
-			<numPomodoroCycles>1</numPomodoroCycles>
+			<numPomodoroCycles>2</numPomodoroCycles>
 		</preset>
 	</presets>
 	<window>

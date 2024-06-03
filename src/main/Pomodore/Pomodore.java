@@ -1,11 +1,11 @@
 package main.Pomodore;
 
+import main.Pomodore.TODOList.OptionsMenu;
 import main.Pomodore.TODOList.TODOItem;
 import main.Pomodore.TODOList.TODOList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.html.Option;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -86,7 +86,7 @@ public class Pomodore extends JFrame
     private JTextField presetInfoText;
     private JTextField todoText;
     private JPanel TODOListPanel;
-    private JButton OptionsTest;
+    private JButton OptionsButton;
 
     private static Pomodore pomodore;
     private static PomodoroManager manager;
@@ -399,6 +399,8 @@ public class Pomodore extends JFrame
         ArrayList<TODOItem> todoItemList = configParser.readTodos();
 
         todoList = new TODOList(pomodore.TODOListPanel, todoItemList);
+
+        OptionsMenu optionsMenu = new OptionsMenu(pomodore.OptionsButton);
 
         pomodore.createAndShowGUI();
         //pomodoro.setImages();
