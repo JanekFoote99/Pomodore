@@ -400,7 +400,15 @@ public class Pomodore extends JFrame
 
         todoList = new TODOList(pomodore.TODOListPanel, todoItemList);
 
-        OptionsMenu optionsMenu = new OptionsMenu(pomodore.OptionsButton);
+        pomodore.OptionsButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                OptionsMenu optionsMenu = new OptionsMenu();
+                optionsMenu.setLocationRelativeTo(pomodore.main);
+            }
+        });
 
         pomodore.createAndShowGUI();
         //pomodoro.setImages();
