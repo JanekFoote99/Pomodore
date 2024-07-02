@@ -6,45 +6,35 @@ import javax.swing.text.html.Option;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OptionsMenu extends JFrame
 {
+    public List<OptionsEntry> optionsEntryList;
+
     public OptionsMenu()
     {
-        createMenu();
-        this.setSize(400, 300);
-        this.setVisible(true);
+        optionsEntryList = new ArrayList<>();
+        optionsEntryList.add(new OptionsEntry("Sound Volume", JSlider.class));
+        optionsEntryList.add(new OptionsEntry("Save Config on Close", JCheckBox.class));
     }
 
-    private void createMenu()
+    public void updateMenu()
     {
-        List<OptionsEntry> optionsEntryList = new ArrayList<>();
 
-        JPanel optionsPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.gridx = 0;
-        gbc.weightx = 1.0;
-        gbc.anchor = GridBagConstraints.NORTH;
+    }
 
-        optionsEntryList.add(new OptionsEntry("Sound Volume", JSlider.class));
-        optionsEntryList.add(new OptionsEntry("Save Config on Closeup", JCheckBox.class));
+    public OptionsEntry getSoundVolumeEntry()
+    {
+        return optionsEntryList.getFirst();
+    }
 
-        int row = 0;
-        for (OptionsEntry entry : optionsEntryList) {
-            JPanel panel = entry.createPanel();
-            panel.setPreferredSize(new Dimension(350, 30));
-            gbc.gridy = row++;
-            optionsPanel.add(panel, gbc);
-        }
-
-        gbc.weighty = 1.0;
-        optionsPanel.add(Box.createVerticalGlue(), gbc);
-
-        add(optionsPanel, BorderLayout.CENTER);
+    public OptionsEntry getSaveConfigEntry()
+    {
+        return optionsEntryList.get(1);
     }
 }

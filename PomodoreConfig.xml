@@ -32,8 +32,8 @@
 	<window>
         <width>1100</width>
         <height>600</height>
-		<xPos>637</xPos>
-		<yPos>252</yPos>
+		<xPos>771</xPos>
+		<yPos>284</yPos>
 	</window>
     <todos><todoItem>Task 1</todoItem><todoItem>Task 2</todoItem><todoItem>Task 3</todoItem></todos>
 </data>

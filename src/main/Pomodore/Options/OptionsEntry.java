@@ -1,6 +1,8 @@
 package main.Pomodore.Options;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class OptionsEntry extends JPanel
@@ -31,9 +33,11 @@ public class OptionsEntry extends JPanel
                 optionsComponent = new JSlider(0, 100, 50);
             } else if (componentType == JCheckBox.class)
             {
-                JCheckBox checkBox = new JCheckBox();
-                checkBox.setHorizontalAlignment(JCheckBox.CENTER);
-                optionsComponent = checkBox;
+                // Create Dummy Checkbox to add a ChangeListener
+                JCheckBox checkbox = new JCheckBox();
+                checkbox.setHorizontalAlignment(JCheckBox.CENTER);
+
+                optionsComponent = checkbox;
             } else
             {
                 System.out.println("Unsupported component type: " + componentType.getName());
@@ -51,6 +55,23 @@ public class OptionsEntry extends JPanel
         componentPanel.add(optionsComponent, BorderLayout.EAST);
 
         return componentPanel;
+    }
+
+    public int getValue()
+    {
+        if (componentType == JSlider.class)
+        {
+            // cast to be able to call JSlider methods
+            JSlider comp = (JSlider) optionsComponent;
+            return comp.getValue();
+        } else if (componentType == JCheckBox.class)
+        {
+            JCheckBox box = (JCheckBox) optionsComponent;
+            return box.isSelected() ? 1 : 0;
+        } else
+        {
+            throw new RuntimeException("Unsupported type");
+        }
     }
 
     public String getOptionsName()

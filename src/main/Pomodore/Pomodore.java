@@ -1,5 +1,6 @@
 package main.Pomodore;
 
+import main.Pomodore.Options.OptionsController;
 import main.Pomodore.Options.OptionsMenu;
 import main.Pomodore.TODOList.TODOItem;
 import main.Pomodore.TODOList.TODOList;
@@ -87,6 +88,7 @@ public class Pomodore extends JFrame
     private JTextField todoText;
     private JPanel TODOListPanel;
     private JButton OptionsButton;
+    private JTextField testField;
 
     private static Pomodore pomodore;
     private static PomodoroManager manager;
@@ -95,6 +97,7 @@ public class Pomodore extends JFrame
     private static XMLParser configParser;
     private MonitorConfig monitorConfig;
     private static TODOList todoList;
+    private static OptionsController optionsController;
 
     private boolean savePreset = false;
 
@@ -399,14 +402,14 @@ public class Pomodore extends JFrame
         ArrayList<TODOItem> todoItemList = configParser.readTodos();
 
         todoList = new TODOList(pomodore.TODOListPanel, todoItemList);
+        optionsController = new OptionsController();
 
         pomodore.OptionsButton.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                OptionsMenu optionsMenu = new OptionsMenu();
-                optionsMenu.setLocationRelativeTo(pomodore.main);
+                optionsController.showView(pomodore);
             }
         });
 
