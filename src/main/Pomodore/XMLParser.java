@@ -1,5 +1,6 @@
 package main.Pomodore;
 
+import main.Pomodore.Options.OptionsMenu;
 import main.Pomodore.TODOList.TODOItem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -298,6 +299,67 @@ public class XMLParser
             }
 
             // TODO: Setup Formatting for todos section
+            transform(doc);
+        } catch (ParserConfigurationException e)
+        {
+            System.out.println("Error while configuring the XML-Parser. Couldn't write Todos!");
+        } catch (SAXException e)
+        {
+            System.out.println("SAX Parser Error. Couldn't write Todos!");
+        } catch (IOException e)
+        {
+            System.out.println("Error while loading Configuration File. Couldn't write Todos!");
+        }
+    }
+
+    public OptionsMenu readSettings(OptionsMenu menu)
+    {
+        try
+        {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            Document doc = db.parse(configFilepath);
+
+            Element settings = (Element) doc.getElementsByTagName("settings").item(0);
+
+            int volume = Integer.parseInt(settings.getElementsByTagName("vol").item(0).getTextContent().trim());
+            int saveConfig = Integer.parseInt(settings.getElementsByTagName("saveConfig").item(0).getTextContent().trim());
+
+            menu.optionsEntryList.getFirst().setValue(volume);
+            menu.optionsEntryList.get(1).setValue(saveConfig);
+
+            return menu;
+        } catch (IOException e)
+        {
+            System.out.println("Error while loading Configuration File. Options couldn't be retrieved");
+            return new OptionsMenu();
+        } catch (ParserConfigurationException e)
+        {
+            System.out.println("Error while configuring the XML-Parser");
+            return new OptionsMenu();
+        } catch (SAXException e)
+        {
+            System.out.println("SAX Parser Error");
+            return new OptionsMenu();
+        }
+    }
+
+    // Writes Settings
+    public void writeSettings(OptionsMenu menu)
+    {
+        try
+        {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            Document doc = db.parse(configFilepath);
+
+            Element settings = (Element) doc.getElementsByTagName("settings").item(0);
+
+            settings.getElementsByTagName("vol").item(0).setTextContent(Integer.toString(menu.getSoundVolumeEntry().getValue()));
+            settings.getElementsByTagName("saveConfig").item(0).setTextContent(Integer.toString(menu.getSaveConfigEntry().getValue()));
+
             transform(doc);
         } catch (ParserConfigurationException e)
         {

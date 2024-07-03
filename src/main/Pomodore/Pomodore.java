@@ -354,6 +354,13 @@ public class Pomodore extends JFrame
 
                     configParser.writeMonitorInformation(new MonitorConfig(x, y, width, height));
                 }
+
+                // Save Options
+                {
+                    OptionsMenu menu = optionsController.getMenu();
+
+                    configParser.writeSettings(menu);
+                }
             }
         });
     }
@@ -409,6 +416,8 @@ public class Pomodore extends JFrame
 
         todoList = new TODOList(pomodore.TODOListPanel, todoItemList);
         optionsController = new OptionsController();
+
+        optionsController.setOptionsMenu(configParser.readSettings(optionsController.getMenu()));
 
         pomodore.OptionsButton.addActionListener(new ActionListener()
         {

@@ -23,6 +23,11 @@ public class OptionsController
         this.view.showView(parent);
     }
 
+    public void setOptionsMenu(OptionsMenu menu)
+    {
+        this.menu = menu;
+    }
+
     public int getSoundVolume()
     {
         return menu.optionsEntryList.getFirst().getValue();
@@ -31,5 +36,10 @@ public class OptionsController
     public OptionsView getView()
     {
         return view;
+    }
+
+    public OptionsMenu getMenu()
+    {
+        return menu;
     }
 }

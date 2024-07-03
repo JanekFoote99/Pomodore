@@ -23,9 +23,20 @@ public class OptionsMenu extends JFrame
         optionsEntryList.add(new OptionsEntry("Save Config on Close", JCheckBox.class));
     }
 
-    public void updateMenu()
+    public void setSoundVolume(int val)
     {
-        
+        optionsEntryList.getFirst().setValue(val);
+    }
+
+    public void setSaveConfigEntry(boolean flag)
+    {
+        if (flag)
+        {
+            optionsEntryList.get(1).setValue(1);
+        } else
+        {
+            optionsEntryList.get(1).setValue(0);
+        }
     }
 
     public OptionsEntry getSoundVolumeEntry()

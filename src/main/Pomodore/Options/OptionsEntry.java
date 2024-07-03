@@ -75,6 +75,18 @@ public class OptionsEntry extends JPanel
         }
     }
 
+    public void setValue(int value)
+    {
+        if (componentType == JSlider.class)
+        {
+            ((JSlider) optionsComponent).setValue(value);
+        } else if (componentType == JCheckBox.class)
+        {
+            JCheckBox checkbox = (JCheckBox) optionsComponent;
+            checkbox.setSelected(value == 1);
+        }
+    }
+
     public String getOptionsName()
     {
         return optionsName.getName();

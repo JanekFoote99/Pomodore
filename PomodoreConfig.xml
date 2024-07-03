@@ -35,5 +35,9 @@
 		<xPos>636</xPos>
 		<yPos>239</yPos>
 	</window>
+	<settings>
+		<vol>100</vol>
+		<saveConfig>0</saveConfig>
+	</settings>
     <todos><todoItem>Task 1</todoItem><todoItem>Task 2</todoItem><todoItem>Task 3</todoItem></todos>
 </data>
