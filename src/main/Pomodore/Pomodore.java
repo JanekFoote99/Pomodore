@@ -70,6 +70,7 @@ public class Pomodore extends JFrame
         return timerBar;
     }
 
+    // UI Elements
     private JTextField TimerStatusText;
     private JFormattedTextField breakTimeInput;
     private JButton SetInputButton;
@@ -92,13 +93,17 @@ public class Pomodore extends JFrame
 
     private static Pomodore pomodore;
     private static PomodoroManager manager;
+    // Current Config
     private PomodoroConfig config;
+    // Config to be saved on closeup
     private PomodoroConfig toSaveConfig;
     private static XMLParser configParser;
     private MonitorConfig monitorConfig;
     private static TODOList todoList;
     private static OptionsController optionsController;
 
+    // Settings variables
+    private int soundVolume = 50;
     private boolean savePreset = false;
 
     public Pomodore()
@@ -255,6 +260,7 @@ public class Pomodore extends JFrame
                 }
             }
         });
+
         Preset3Button.addActionListener(new ActionListener()
         {
             @Override
@@ -310,44 +316,44 @@ public class Pomodore extends JFrame
             @Override
             public void windowClosing(WindowEvent e)
             {
-            // Save Timer config
-            {
-                PomodoroConfig toSave = new PomodoroConfig();
+                // Save Timer config
+                {
+                    PomodoroConfig toSave = new PomodoroConfig();
 
-                toSave.workTime = Integer.parseInt(workTimeInput.getText().trim());
-                toSave.breakTime = Integer.parseInt(breakTimeInput.getText().trim());
-                toSave.breakTimePomodoro = Integer.parseInt(longBreakTimeInput.getText().trim());
-                toSave.numCycles = Integer.parseInt(numCyclesInput.getText().trim());
-                toSave.numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
+                    toSave.workTime = Integer.parseInt(workTimeInput.getText().trim());
+                    toSave.breakTime = Integer.parseInt(breakTimeInput.getText().trim());
+                    toSave.breakTimePomodoro = Integer.parseInt(longBreakTimeInput.getText().trim());
+                    toSave.numCycles = Integer.parseInt(numCyclesInput.getText().trim());
+                    toSave.numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
 
-                configParser.writeTextFields(toSave);
-            }
+                    configParser.writeTextFields(toSave);
+                }
 
-            // Save TODOList Elements
-            {
-                ArrayList<TODOItem> items = todoList.getTodos();
+                // Save TODOList Elements
+                {
+                    ArrayList<TODOItem> items = todoList.getTodos();
 
-                configParser.writeTodos(items);
-            }
+                    configParser.writeTodos(items);
+                }
 
-            // Save current window Position, Width and monitorID
-            {
-                Point windowPosition = pomodore.getLocation();
+                // Save current window Position, Width and monitorID
+                {
+                    Point windowPosition = pomodore.getLocation();
 
-                GraphicsConfiguration gc = pomodore.getGraphicsConfiguration();
-                GraphicsDevice[] monitors = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+                    GraphicsConfiguration gc = pomodore.getGraphicsConfiguration();
+                    GraphicsDevice[] monitors = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 
-                int x = windowPosition.x;
-                int y = windowPosition.y;
-                int width = pomodore.getWidth();
-                int height = pomodore.getHeight();
+                    int x = windowPosition.x;
+                    int y = windowPosition.y;
+                    int width = pomodore.getWidth();
+                    int height = pomodore.getHeight();
 
-                // Clamp so that everything is visible on startup
-                width = Math.min(2560, Math.max(width, 1100));
-                height = Math.min(1440, Math.max(height, 600));
+                    // Clamp so that everything is visible on startup
+                    width = Math.min(2560, Math.max(width, 1100));
+                    height = Math.min(1440, Math.max(height, 600));
 
-                configParser.writeMonitorInformation(new MonitorConfig(x, y, width, height));
-            }
+                    configParser.writeMonitorInformation(new MonitorConfig(x, y, width, height));
+                }
             }
         });
     }
@@ -413,9 +419,19 @@ public class Pomodore extends JFrame
             }
         });
 
+        optionsController.getView().addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                manager.setVolume(optionsController.getSoundVolume());
+            }
+        });
+
         pomodore.createAndShowGUI();
         //pomodoro.setImages();
         manager = new PomodoroManager(pomodore.config, pomodore);
+        manager.setVolume(pomodore.soundVolume);
     }
 
     private void setImages()

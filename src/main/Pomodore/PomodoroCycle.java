@@ -28,6 +28,9 @@ public class PomodoroCycle
         OVER
     }
 
+    // Volume for Cycle Transition sounds
+    private float soundVolume = 0.5f;
+
     // Flag to determine which Cycle the variable startTime represents
     private CycleType curCycle;
 
@@ -129,6 +132,7 @@ public class PomodoroCycle
     static final String B_RED = "#D2222D";
     static final String B_YELLOW = "#FFBF00";
 
+    // Default Constructor
     public PomodoroCycle()
     {
         workTime = MinutesToMilliseconds(25);
@@ -185,16 +189,6 @@ public class PomodoroCycle
         setupTimer();
     }
 
-    private void setup()
-    {
-
-    }
-
-    private void setupDisplays()
-    {
-
-    }
-
     private void setupTimer()
     {
         timer = new Timer(10, new ActionListener()
@@ -246,6 +240,15 @@ public class PomodoroCycle
         timer.setInitialDelay(0);
     }
 
+    public void setSoundVolume(int newVolume)
+    {
+        int oldRange = 100 - 0;
+        float newRange = 1.0f - 0.0f;
+
+        // Cast the 0 - 100 Integer range to 0 - 1 Float range
+        soundVolume = ((float) newVolume / oldRange) * newRange;
+    }
+
     void playCycleTransitionSound(String soundpath)
     {
         try
@@ -255,6 +258,9 @@ public class PomodoroCycle
 
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
+
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(soundVolume));
             clip.start();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e)
         {

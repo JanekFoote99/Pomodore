@@ -3,37 +3,33 @@ package main.Pomodore.Options;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class OptionsController
 {
-    private static OptionsController INSTANCE;
-    private static OptionsView view;
-    private static OptionsMenu menu;
+    private OptionsView view;
+    private OptionsMenu menu;
 
     public OptionsController()
     {
-        menu = new OptionsMenu();
-        view = new OptionsView(menu);
+        this.menu = new OptionsMenu();
+        this.view = new OptionsView(this.menu);
     }
 
     public void showView(JFrame parent)
     {
-        view.setLocationRelativeTo(parent);
+        this.view.setLocationRelativeTo(parent);
 
-        view.addWindowListener(new WindowAdapter()
-        {
-            @Override
-            public void windowStateChanged(WindowEvent e)
-            {
-                menu.updateMenu();
-            }
-        });
-
-        view.showView(parent);
+        this.view.showView(parent);
     }
 
-    /*public int getSoundVolume()
+    public int getSoundVolume()
     {
+        return menu.optionsEntryList.getFirst().getValue();
+    }
 
-    }*/
+    public OptionsView getView()
+    {
+        return view;
+    }
 }

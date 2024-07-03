@@ -25,7 +25,7 @@ public class OptionsMenu extends JFrame
 
     public void updateMenu()
     {
-
+        
     }
 
     public OptionsEntry getSoundVolumeEntry()

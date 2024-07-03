@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><data>
     <timer>
-        <worktime>25</worktime>
-        <breaktime>5</breaktime>
+        <worktime>1</worktime>
+        <breaktime>1</breaktime>
         <longbreaktime>20</longbreaktime>
         <numCycles>4</numCycles>
         <numPomodoroCycles>2</numPomodoroCycles>
@@ -32,8 +32,8 @@
 	<window>
         <width>1100</width>
         <height>600</height>
-		<xPos>771</xPos>
-		<yPos>284</yPos>
+		<xPos>636</xPos>
+		<yPos>239</yPos>
 	</window>
     <todos><todoItem>Task 1</todoItem><todoItem>Task 2</todoItem><todoItem>Task 3</todoItem></todos>
 </data>

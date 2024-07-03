@@ -34,33 +34,44 @@ public class PomodoroManager
     {
         boolean parameterChanges = false;
 
-        if(curPomodoro.getWorkTime() != config.workTime){
+        if (curPomodoro.getWorkTime() != config.workTime)
+        {
             curPomodoro.setWorkTime(config.workTime);
             parameterChanges = true;
         }
-        if(curPomodoro.getBreakTime() != config.breakTime){
+        if (curPomodoro.getBreakTime() != config.breakTime)
+        {
             curPomodoro.setBreakTime(config.breakTime);
             parameterChanges = true;
         }
-        if(curPomodoro.getBreakTimePomodoro() != config.breakTimePomodoro){
+        if (curPomodoro.getBreakTimePomodoro() != config.breakTimePomodoro)
+        {
             curPomodoro.setBreakTimePomodoro(config.breakTimePomodoro);
             parameterChanges = true;
         }
-        if(curPomodoro.getNumCycles() != config.numCycles){
+        if (curPomodoro.getNumCycles() != config.numCycles)
+        {
             curPomodoro.setNumCycles(config.numCycles);
             parameterChanges = true;
         }
-        if(curPomodoro.getNumCyclesPomodoro() != config.numPomodoroCycles){
+        if (curPomodoro.getNumCyclesPomodoro() != config.numPomodoroCycles)
+        {
             curPomodoro.setNumCyclesPomodoro(config.numPomodoroCycles);
             parameterChanges = true;
         }
 
         // Error: for some reason the timer starts in the break Cycle
-        if(parameterChanges){
+        if (parameterChanges)
+        {
             curPomodoro.resetTimer();
         }
 
         curPomodoro.startWorkCycle();
+    }
+
+    public void setVolume(int volume)
+    {
+        curPomodoro.setSoundVolume(volume);
     }
 
     public void SetConfig(PomodoroConfig config)
