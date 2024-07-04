@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><data>
     <timer>
-        <worktime>1</worktime>
-        <breaktime>1</breaktime>
+        <worktime>25</worktime>
+        <breaktime>5</breaktime>
         <longbreaktime>20</longbreaktime>
         <numCycles>4</numCycles>
         <numPomodoroCycles>2</numPomodoroCycles>
@@ -32,12 +32,12 @@
 	<window>
         <width>1100</width>
         <height>600</height>
-		<xPos>636</xPos>
-		<yPos>239</yPos>
+		<xPos>664</xPos>
+		<yPos>401</yPos>
 	</window>
 	<settings>
-		<vol>100</vol>
-		<saveConfig>0</saveConfig>
+		<vol>49</vol>
+		<saveConfig>1</saveConfig>
 	</settings>
     <todos><todoItem>Task 1</todoItem><todoItem>Task 2</todoItem><todoItem>Task 3</todoItem></todos>
 </data>

@@ -1,17 +1,10 @@
 package main.Pomodore.Options;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
 
 public class OptionsEntry extends JPanel
 {
-    private final int TEXTFIELD_WIDTH = 200;
-    private final int COMPONENT_WIDTH = 100;
-    private final int ITEM_HEIGHT = 30;
-
     private final JMenuItem optionsName;
     private JComponent optionsComponent;
     private final Class<? extends JComponent> componentType;
@@ -41,7 +34,7 @@ public class OptionsEntry extends JPanel
                 optionsComponent = checkbox;
             } else
             {
-                System.out.println("Unsupported component type: " + componentType.getName());
+                System.out.println(STR."Unsupported component type: \{componentType.getName()}");
             }
         } catch (Exception e)
         {
@@ -49,7 +42,10 @@ public class OptionsEntry extends JPanel
         }
 
         // Change size of Items
+        int TEXTFIELD_WIDTH = 200;
+        int ITEM_HEIGHT = 30;
         optionsName.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, ITEM_HEIGHT));
+        int COMPONENT_WIDTH = 100;
         optionsComponent.setPreferredSize(new Dimension(COMPONENT_WIDTH, ITEM_HEIGHT));
 
         componentPanel.add(optionsName, BorderLayout.WEST);
@@ -85,10 +81,5 @@ public class OptionsEntry extends JPanel
             JCheckBox checkbox = (JCheckBox) optionsComponent;
             checkbox.setSelected(value == 1);
         }
-    }
-
-    public String getOptionsName()
-    {
-        return optionsName.getName();
     }
 }

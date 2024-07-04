@@ -4,25 +4,18 @@ import main.Pomodore.Options.OptionsMenu;
 import main.Pomodore.TODOList.TODOItem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.*;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
-import java.util.List;
 
 public class XMLParser
 {
@@ -259,15 +252,15 @@ public class XMLParser
         } catch (IOException e)
         {
             System.out.println("Error while loading Configuration File. Window position couldn't be retrieved");
-            return new ArrayList<TODOItem>();
+            return new ArrayList<>();
         } catch (ParserConfigurationException e)
         {
             System.out.println("Error while configuring the XML-Parser");
-            return new ArrayList<TODOItem>();
+            return new ArrayList<>();
         } catch (SAXException e)
         {
             System.out.println("SAX Parser Error");
-            return new ArrayList<TODOItem>();
+            return new ArrayList<>();
         }
     }
 
@@ -379,9 +372,6 @@ public class XMLParser
         {
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer = tf.newTransformer();
-            // Creates Whitespaces between XML Nodes
-            /*transformer.setOutputProperty(OutputPropertiesFactory.S_KEY_INDENT_AMOUNT, "4");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");*/
 
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(configFilepath);

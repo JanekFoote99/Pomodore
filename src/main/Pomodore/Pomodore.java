@@ -14,22 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-class MonitorConfig
-{
-    public int x;
-    public int y;
-    public int width;
-    public int height;
-
-    public MonitorConfig(int x, int y, int width, int height)
-    {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
-};
-
 public class Pomodore extends JFrame
 {
     private JPanel main;
@@ -98,183 +82,150 @@ public class Pomodore extends JFrame
     // Config to be saved on closeup
     private PomodoroConfig toSaveConfig;
     private static XMLParser configParser;
-    private MonitorConfig monitorConfig;
     private static TODOList todoList;
     private static OptionsController optionsController;
 
-    // Settings variables
-    private int soundVolume = 50;
+    // Flag that Enables the Option to save a Preset to one of the 3 options
     private boolean savePreset = false;
 
     public Pomodore()
     {
-        Start.addActionListener(new ActionListener()
+        Start.addActionListener(_ ->
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                config.update(Integer.parseInt(numCyclesInput.getText()),
-                        Float.parseFloat(workTimeInput.getText()),
-                        Float.parseFloat(breakTimeInput.getText()),
-                        Integer.parseInt(numCyclesPomodoroInput.getText()),
-                        Float.parseFloat(longBreakTimeInput.getText()));
-                manager.startPomodoro(config);
-            }
+            config.update(Integer.parseInt(numCyclesInput.getText()),
+                    Float.parseFloat(workTimeInput.getText()),
+                    Float.parseFloat(breakTimeInput.getText()),
+                    Integer.parseInt(numCyclesPomodoroInput.getText()),
+                    Float.parseFloat(longBreakTimeInput.getText()));
+            manager.startPomodoro(config);
         });
 
-        Reset.addActionListener(new ActionListener()
+        Reset.addActionListener(_ ->
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                config.update(Integer.parseInt(numCyclesInput.getText()),
-                        Float.parseFloat(workTimeInput.getText()),
-                        Float.parseFloat(breakTimeInput.getText()),
-                        Integer.parseInt(numCyclesPomodoroInput.getText()),
-                        Float.parseFloat(longBreakTimeInput.getText()));
-                manager.SetConfig(config);
-                manager.resetPomodoro();
-            }
+            config.update(Integer.parseInt(numCyclesInput.getText()),
+                    Float.parseFloat(workTimeInput.getText()),
+                    Float.parseFloat(breakTimeInput.getText()),
+                    Integer.parseInt(numCyclesPomodoroInput.getText()),
+                    Float.parseFloat(longBreakTimeInput.getText()));
+            manager.SetConfig(config);
+            manager.resetPomodoro();
         });
 
-        Pause.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                manager.pausePomodoro();
-            }
-        });
+        Pause.addActionListener(_ -> manager.pausePomodoro());
 
-        SetInputButton.addActionListener(new ActionListener()
+        SetInputButton.addActionListener(_ ->
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
+            // Set Work Time
+            try
             {
-                // Set Work Time
-                try
+                int workTimeVal = Integer.parseInt(workTimeInput.getText());
+                if (workTimeVal < 0 || workTimeVal > 120)
                 {
-                    int workTimeVal = Integer.parseInt(workTimeInput.getText());
-                    if (workTimeVal < 0 || workTimeVal > 120)
-                    {
-                        JOptionPane.showMessageDialog(null, "Work Time unchanged, enter a value between 0 and 120");
-                    } else
-                    {
-                        config.SetWorkTime(workTimeVal);
-                    }
-                } catch (NumberFormatException exception)
-                {
-                    JOptionPane.showMessageDialog(null, "Work Time not an Integer");
-                }
-                // Set Break Time
-                try
-                {
-                    int breakTimeVal = Integer.parseInt(breakTimeInput.getText());
-                    if (breakTimeVal < 0 || breakTimeVal > 30)
-                    {
-                        JOptionPane.showMessageDialog(null, "Pause Time unchanged, enter a value between 0 and 30");
-                    } else
-                    {
-                        config.SetBreakTime(breakTimeVal);
-                    }
-                } catch (NumberFormatException exception)
-                {
-                    JOptionPane.showMessageDialog(null, "Pause Time not an Integer");
-                }
-                // Set Long Pause Time
-                try
-                {
-                    int longBreakTimeVal = Integer.parseInt(longBreakTimeInput.getText());
-                    if (longBreakTimeVal < 0 || longBreakTimeVal > 30)
-                    {
-                        JOptionPane.showMessageDialog(null, "Long Pause Time unchanged, enter a value between 0 and 30");
-                    } else
-                    {
-                        config.SetLongBreakTime(longBreakTimeVal);
-                    }
-                } catch (NumberFormatException exception)
-                {
-                    JOptionPane.showMessageDialog(null, "Long Pause Time not an Integer");
-                }
-                // Set Number of Cycles
-                try
-                {
-                    int numCycles = Integer.parseInt(numCyclesInput.getText());
-                    if (numCycles < 0 || numCycles > 12)
-                    {
-                        JOptionPane.showMessageDialog(null, "Number of Cycles unchanged, enter a value between 0 and 12");
-                    } else
-                    {
-                        config.SetNumberOfCycles(numCycles);
-                    }
-                } catch (NumberFormatException exception)
-                {
-                    JOptionPane.showMessageDialog(null, "Number of Cycles not an Integer");
-                }
-                // Set Number of Pomodoro Cycles
-                try
-                {
-                    int numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText());
-                    if (numPomodoroCycles < 0 || numPomodoroCycles > 4)
-                    {
-                        JOptionPane.showMessageDialog(null, "Number of Pomodoro Cycles unchanged, enter a value between 0 and 4");
-                    } else
-                    {
-                        config.SetNumberOfPomodoroCycles(numPomodoroCycles);
-                    }
-                } catch (NumberFormatException exception)
-                {
-                    JOptionPane.showMessageDialog(null, "Number of Pomodoro Cycles not an Integer");
-                }
-            }
-        });
-        Preset1Button.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (savePreset)
-                {
-                    savePreset(0);
+                    JOptionPane.showMessageDialog(null, "Work Time unchanged, enter a value between 0 and 120");
                 } else
                 {
-                    PomodoroConfig config = configParser.readPreset(0);
-
-                    setTextFields(config);
+                    config.SetWorkTime(workTimeVal);
                 }
-            }
-        });
-        Preset2Button.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
+            } catch (NumberFormatException exception)
             {
-                if (savePreset)
+                JOptionPane.showMessageDialog(null, "Work Time not an Integer");
+            }
+            // Set Break Time
+            try
+            {
+                int breakTimeVal = Integer.parseInt(breakTimeInput.getText());
+                if (breakTimeVal < 0 || breakTimeVal > 30)
                 {
-                    savePreset(1);
+                    JOptionPane.showMessageDialog(null, "Pause Time unchanged, enter a value between 0 and 30");
                 } else
                 {
-                    PomodoroConfig config = configParser.readPreset(1);
-
-                    setTextFields(config);
+                    config.SetBreakTime(breakTimeVal);
                 }
+            } catch (NumberFormatException exception)
+            {
+                JOptionPane.showMessageDialog(null, "Pause Time not an Integer");
+            }
+            // Set Long Pause Time
+            try
+            {
+                int longBreakTimeVal = Integer.parseInt(longBreakTimeInput.getText());
+                if (longBreakTimeVal < 0 || longBreakTimeVal > 30)
+                {
+                    JOptionPane.showMessageDialog(null, "Long Pause Time unchanged, enter a value between 0 and 30");
+                } else
+                {
+                    config.SetLongBreakTime(longBreakTimeVal);
+                }
+            } catch (NumberFormatException exception)
+            {
+                JOptionPane.showMessageDialog(null, "Long Pause Time not an Integer");
+            }
+            // Set Number of Cycles
+            try
+            {
+                int numCycles = Integer.parseInt(numCyclesInput.getText());
+                if (numCycles < 0 || numCycles > 12)
+                {
+                    JOptionPane.showMessageDialog(null, "Number of Cycles unchanged, enter a value between 0 and 12");
+                } else
+                {
+                    config.SetNumberOfCycles(numCycles);
+                }
+            } catch (NumberFormatException exception)
+            {
+                JOptionPane.showMessageDialog(null, "Number of Cycles not an Integer");
+            }
+            // Set Number of Pomodoro Cycles
+            try
+            {
+                int numPomodoroCycles = Integer.parseInt(numCyclesPomodoroInput.getText());
+                if (numPomodoroCycles < 0 || numPomodoroCycles > 4)
+                {
+                    JOptionPane.showMessageDialog(null, "Number of Pomodoro Cycles unchanged, enter a value between 0 and 4");
+                } else
+                {
+                    config.SetNumberOfPomodoroCycles(numPomodoroCycles);
+                }
+            } catch (NumberFormatException exception)
+            {
+                JOptionPane.showMessageDialog(null, "Number of Pomodoro Cycles not an Integer");
+            }
+        });
+        Preset1Button.addActionListener(_ ->
+        {
+            if (savePreset)
+            {
+                savePreset(0);
+            } else
+            {
+                PomodoroConfig config = configParser.readPreset(0);
+
+                setTextFields(config);
+            }
+        });
+        Preset2Button.addActionListener(_ ->
+        {
+            if (savePreset)
+            {
+                savePreset(1);
+            } else
+            {
+                PomodoroConfig config = configParser.readPreset(1);
+
+                setTextFields(config);
             }
         });
 
-        Preset3Button.addActionListener(new ActionListener()
+        Preset3Button.addActionListener(_ ->
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
+            if (savePreset)
             {
-                if (savePreset)
-                {
-                    savePreset(2);
-                } else
-                {
-                    PomodoroConfig config = configParser.readPreset(2);
+                savePreset(2);
+            } else
+            {
+                PomodoroConfig config = configParser.readPreset(2);
 
-                    setTextFields(config);
-                }
+                setTextFields(config);
             }
         });
 
@@ -282,32 +233,28 @@ public class Pomodore extends JFrame
                 to change it. After clicking the given Preset a prompt should notify the user that the selected Preset
                 will be deleted. The Presets should be saved to a XML File so that the saved Presets remain the same
                 after starting the app again. */
-        setAsPresetButton.addActionListener(new ActionListener()
+        setAsPresetButton.addActionListener(_ ->
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
+            if (savePreset)
             {
-                if (savePreset)
-                {
-                    setPresetButtonColors(Color.WHITE);
+                setPresetButtonColors(Color.WHITE);
 
-                    savePreset = false;
-                    presetInfoText.setEnabled(false);
-                } else
-                {
-                    float worktime = Float.parseFloat(workTimeInput.getText().trim());
-                    float breaktime = Float.parseFloat(breakTimeInput.getText().trim());
-                    float longbreaktime = Float.parseFloat(longBreakTimeInput.getText().trim());
-                    int numcycles = Integer.parseInt(numCyclesInput.getText().trim());
-                    int numcyclespomodoro = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
+                savePreset = false;
+                presetInfoText.setEnabled(false);
+            } else
+            {
+                float worktime = Float.parseFloat(workTimeInput.getText().trim());
+                float breaktime = Float.parseFloat(breakTimeInput.getText().trim());
+                float longbreaktime = Float.parseFloat(longBreakTimeInput.getText().trim());
+                int numcycles = Integer.parseInt(numCyclesInput.getText().trim());
+                int numcyclespomodoro = Integer.parseInt(numCyclesPomodoroInput.getText().trim());
 
-                    toSaveConfig = new PomodoroConfig(numcycles, worktime, breaktime, numcyclespomodoro, longbreaktime);
+                toSaveConfig = new PomodoroConfig(numcycles, worktime, breaktime, numcyclespomodoro, longbreaktime);
 
-                    setPresetButtonColors(Color.YELLOW);
+                setPresetButtonColors(Color.YELLOW);
 
-                    savePreset = true;
-                    presetInfoText.setEnabled(true);
-                }
+                savePreset = true;
+                presetInfoText.setEnabled(true);
             }
         });
 
@@ -316,7 +263,8 @@ public class Pomodore extends JFrame
             @Override
             public void windowClosing(WindowEvent e)
             {
-                // Save Timer config
+                // Save Timer config (if the corresponding Options Checkbox is set)
+                if(optionsController.getMenu().getSaveTimersEntry())
                 {
                     PomodoroConfig toSave = new PomodoroConfig();
 
@@ -339,9 +287,6 @@ public class Pomodore extends JFrame
                 // Save current window Position, Width and monitorID
                 {
                     Point windowPosition = pomodore.getLocation();
-
-                    GraphicsConfiguration gc = pomodore.getGraphicsConfiguration();
-                    GraphicsDevice[] monitors = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 
                     int x = windowPosition.x;
                     int y = windowPosition.y;
@@ -393,11 +338,7 @@ public class Pomodore extends JFrame
 
     private void setButtonTextField(int presetId, PomodoroConfig newConfig)
     {
-        String formattedText = String.format("%s", (long) newConfig.workTime) + "/" +
-                String.format("%s", (long) newConfig.breakTime) + "/" +
-                String.format("%s", (long) newConfig.breakTimePomodoro) + "/" +
-                String.format("%s", (long) newConfig.numCycles) + "/" +
-                String.format("%s", (long) newConfig.numPomodoroCycles);
+        String formattedText = STR."\{String.format("%s", (long) newConfig.workTime)}/\{String.format("%s", (long) newConfig.breakTime)}/\{String.format("%s", (long) newConfig.breakTimePomodoro)}/\{String.format("%s", (long) newConfig.numCycles)}/\{String.format("%s", (long) newConfig.numPomodoroCycles)}";
 
         if (presetId == 0)
             Preset1Button.setText(formattedText);
@@ -419,14 +360,7 @@ public class Pomodore extends JFrame
 
         optionsController.setOptionsMenu(configParser.readSettings(optionsController.getMenu()));
 
-        pomodore.OptionsButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                optionsController.showView(pomodore);
-            }
-        });
+        pomodore.OptionsButton.addActionListener(_ -> optionsController.showView(pomodore));
 
         optionsController.getView().addWindowListener(new WindowAdapter()
         {
@@ -440,7 +374,8 @@ public class Pomodore extends JFrame
         pomodore.createAndShowGUI();
         //pomodoro.setImages();
         manager = new PomodoroManager(pomodore.config, pomodore);
-        manager.setVolume(pomodore.soundVolume);
+        // Set Initial/Default Volume for Sound clips
+        manager.setVolume(50);
     }
 
     private void setImages()
@@ -478,12 +413,9 @@ public class Pomodore extends JFrame
 
     private void restoreWindowPosition()
     {
-        monitorConfig = configParser.readMonitorInformation();
+        MonitorConfig monitorConfig = configParser.readMonitorInformation();
 
         pomodore.setSize(monitorConfig.width, monitorConfig.height);
-
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] monitors = ge.getScreenDevices();
 
         pomodore.setLocation(monitorConfig.x, monitorConfig.y);
     }

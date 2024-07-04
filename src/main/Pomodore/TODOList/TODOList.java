@@ -1,24 +1,14 @@
 package main.Pomodore.TODOList;
 
-import main.Pomodore.XMLParser;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 
 public class TODOList
 {
     private DefaultTableModel tableModel;
     private JTable todoTable;
-
-    // TODOList Constructor for an exmpty list. Gets called when the XMLParser
-    // throws an Exception when reading the config
-    public TODOList(JPanel panel)
-    {
-        setupList(panel);
-    }
 
     // Constructor with read Todos
     public TODOList(JPanel panel, ArrayList<TODOItem> items)
@@ -83,44 +73,26 @@ public class TODOList
         JButton addItemButton = new JButton("Add new Item");
         panel.add(addItemButton, BorderLayout.SOUTH);
 
-        addItemButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                addItem("");
-            }
-        });
+        addItemButton.addActionListener(_ -> addItem(""));
     }
 
     public void addItem(String text)
     {
         TODOItem item = new TODOItem(text);
 
-        item.getDeleteButton().addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                deleteItem(item);
-            }
-        });
+        item.getDeleteButton().addActionListener(_ -> deleteItem(item));
 
-        item.getCheckBox().addItemListener(new ItemListener()
+        item.getCheckBox().addItemListener(_ ->
         {
-            @Override
-            public void itemStateChanged(ItemEvent e)
+            if (item.getCheckBox().isSelected())
             {
-                if (item.getCheckBox().isSelected())
-                {
-                    item.getTextField().setBackground(Color.GREEN);
-                } else
-                {
-                    item.getTextField().setBackground(Color.WHITE);
-                }
-                // update JTable. Else the Color change is delayed upon the next Click
-                todoTable.repaint();
+                item.getTextField().setBackground(Color.GREEN);
+            } else
+            {
+                item.getTextField().setBackground(Color.WHITE);
             }
+            // update JTable. Else the Color change is delayed upon the next Click
+            todoTable.repaint();
         });
 
         tableModel.addRow(new Object[]{item, item, item});

@@ -1,13 +1,10 @@
 package main.Pomodore.Options;
 
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 public class OptionsController
 {
-    private OptionsView view;
+    private final OptionsView view;
     private OptionsMenu menu;
 
     public OptionsController()
