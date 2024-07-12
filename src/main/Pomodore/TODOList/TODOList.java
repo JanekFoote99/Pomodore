@@ -73,16 +73,16 @@ public class TODOList
         JButton addItemButton = new JButton("Add new Item");
         panel.add(addItemButton, BorderLayout.SOUTH);
 
-        addItemButton.addActionListener(_ -> addItem(""));
+        addItemButton.addActionListener(e -> addItem(""));
     }
 
     public void addItem(String text)
     {
         TODOItem item = new TODOItem(text);
 
-        item.getDeleteButton().addActionListener(_ -> deleteItem(item));
+        item.getDeleteButton().addActionListener(e -> deleteItem(item));
 
-        item.getCheckBox().addItemListener(_ ->
+        item.getCheckBox().addItemListener(e ->
         {
             if (item.getCheckBox().isSelected())
             {

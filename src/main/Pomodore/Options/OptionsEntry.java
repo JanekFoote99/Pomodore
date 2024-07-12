@@ -34,7 +34,7 @@ public class OptionsEntry extends JPanel
                 optionsComponent = checkbox;
             } else
             {
-                System.out.println(STR."Unsupported component type: \{componentType.getName()}");
+                //System.out.println(STR."Unsupported component type: \{componentType.getName()}");
             }
         } catch (Exception e)
         {

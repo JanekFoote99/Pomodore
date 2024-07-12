@@ -401,6 +401,7 @@ public class PomodoroCycle
             setUIComponents();
 
             frame.getContentPane().setBackground(Color.decode(B_GREEN));
+            frame.getContentPane();
             timerTime = (long) workTime;
             timer.restart();
         } else if (timerPaused)

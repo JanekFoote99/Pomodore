@@ -90,7 +90,7 @@ public class Pomodore extends JFrame
 
     public Pomodore()
     {
-        Start.addActionListener(_ ->
+        Start.addActionListener(e ->
         {
             config.update(Integer.parseInt(numCyclesInput.getText()),
                     Float.parseFloat(workTimeInput.getText()),
@@ -100,7 +100,7 @@ public class Pomodore extends JFrame
             manager.startPomodoro(config);
         });
 
-        Reset.addActionListener(_ ->
+        Reset.addActionListener(e ->
         {
             config.update(Integer.parseInt(numCyclesInput.getText()),
                     Float.parseFloat(workTimeInput.getText()),
@@ -111,9 +111,9 @@ public class Pomodore extends JFrame
             manager.resetPomodoro();
         });
 
-        Pause.addActionListener(_ -> manager.pausePomodoro());
+        Pause.addActionListener(e -> manager.pausePomodoro());
 
-        SetInputButton.addActionListener(_ ->
+        SetInputButton.addActionListener(e ->
         {
             // Set Work Time
             try
@@ -191,7 +191,7 @@ public class Pomodore extends JFrame
                 JOptionPane.showMessageDialog(null, "Number of Pomodoro Cycles not an Integer");
             }
         });
-        Preset1Button.addActionListener(_ ->
+        Preset1Button.addActionListener(e ->
         {
             if (savePreset)
             {
@@ -203,7 +203,7 @@ public class Pomodore extends JFrame
                 setTextFields(config);
             }
         });
-        Preset2Button.addActionListener(_ ->
+        Preset2Button.addActionListener(e ->
         {
             if (savePreset)
             {
@@ -216,7 +216,7 @@ public class Pomodore extends JFrame
             }
         });
 
-        Preset3Button.addActionListener(_ ->
+        Preset3Button.addActionListener(e ->
         {
             if (savePreset)
             {
@@ -233,7 +233,7 @@ public class Pomodore extends JFrame
                 to change it. After clicking the given Preset a prompt should notify the user that the selected Preset
                 will be deleted. The Presets should be saved to a XML File so that the saved Presets remain the same
                 after starting the app again. */
-        setAsPresetButton.addActionListener(_ ->
+        setAsPresetButton.addActionListener(e ->
         {
             if (savePreset)
             {
@@ -338,7 +338,12 @@ public class Pomodore extends JFrame
 
     private void setButtonTextField(int presetId, PomodoroConfig newConfig)
     {
-        String formattedText = STR."\{String.format("%s", (long) newConfig.workTime)}/\{String.format("%s", (long) newConfig.breakTime)}/\{String.format("%s", (long) newConfig.breakTimePomodoro)}/\{String.format("%s", (long) newConfig.numCycles)}/\{String.format("%s", (long) newConfig.numPomodoroCycles)}";
+        String formattedText = String.format("%s", (long) newConfig.workTime) + "/" +
+                                String.format("%s", (long) newConfig.breakTime) + "/" +
+                                String.format("%s", (long) newConfig.breakTimePomodoro) + "/" +
+                                String.format("%s", (long) newConfig.numCycles) + "/" +
+                                String.format("%s", (long) newConfig.numPomodoroCycles);
+
 
         if (presetId == 0)
             Preset1Button.setText(formattedText);
@@ -353,6 +358,8 @@ public class Pomodore extends JFrame
         configParser = new XMLParser("./PomodoreConfig.xml");
         pomodore = new Pomodore();
 
+
+
         ArrayList<TODOItem> todoItemList = configParser.readTodos();
 
         todoList = new TODOList(pomodore.TODOListPanel, todoItemList);
@@ -360,7 +367,7 @@ public class Pomodore extends JFrame
 
         optionsController.setOptionsMenu(configParser.readSettings(optionsController.getMenu()));
 
-        pomodore.OptionsButton.addActionListener(_ -> optionsController.showView(pomodore));
+        pomodore.OptionsButton.addActionListener(e -> optionsController.showView(pomodore));
 
         optionsController.getView().addWindowListener(new WindowAdapter()
         {
@@ -405,10 +412,18 @@ public class Pomodore extends JFrame
         pomodore.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pomodore.config = new PomodoroConfig(4, 25.0f, 5.0f, 2, 20.0f);
 
-        timerBar.setForeground(Color.BLACK);
+        // way to show the icon in the header of the application (not working yet)
+        Image mainIcon = Toolkit.getDefaultToolkit().getImage("C:\\Users\\foote\\source\\repos\\Pomodoro\\Assets\\graphics\\PomodoroIcon.ico");
+        pomodore.setIconImage(mainIcon);
 
+        // Prepare Default UI Elements
+        numCycleDisplay.setText(1 + " / " + 4);
+        numPomodoroCycleDisplay.setText(1 + " / " + 2);
+
+        timerBar.setForeground(Color.BLACK);
         setButtonTextFieldsOnStartup();
         setCustomTimerTextField();
+
     }
 
     private void restoreWindowPosition()
