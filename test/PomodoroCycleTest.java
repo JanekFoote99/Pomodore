@@ -1,5 +1,3 @@
-package main.Pomodore;
-
 import main.Pomodore.Pomodore;
 import main.Pomodore.PomodoroConfig;
 import main.Pomodore.PomodoroCycle;
